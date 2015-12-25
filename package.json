@@ -1,0 +1,32 @@
+{
+  "title": "TTSFox",
+  "name": "ttsfox",
+  "version": "0.0.1",
+  "description": "Text to speech on Firefox",
+  "main": "index.js",
+  "author": "ettoolong@hotmail.com",
+  "engines": {
+    "firefox": ">=38.0a1",
+    "fennec": ">=38.0a1"
+  },
+  "license": "MIT",
+  "keywords": [
+    "jetpack"
+  ],
+  "preferences": [{
+    "name": "SpeechLanguage",
+    "type": "menulist",
+    "title": "Speech Language",
+    "value": 0,
+    "options": [
+        {
+            "value": 0,
+            "label": "en-US"
+        },
+        {
+            "value": 1,
+            "label": "zh-TW"
+        }
+    ]
+  }]
+}
