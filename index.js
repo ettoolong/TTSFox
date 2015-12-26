@@ -3,11 +3,15 @@ var data = self.data;
 var contextMenu = require("sdk/context-menu");
 var pageMod = require("sdk/page-mod");
 
+//read all preferences - start
 var name = "extensions.@ttsfox.";
 var pref = require("sdk/preferences/service");
-var lang = ['en-US', 'zh-TW'];
 var ttsPrefs = {};
-ttsPrefs.speechLanguage = lang[pref.get(name + 'SpeechLanguage')];
+var prefsList = ['lang', 'pitch', 'rate', 'volume'];
+for(var i=0;i<prefsList.length;++i){
+  ttsPrefs[prefsList[i]] = pref.get(name + prefsList[i]);
+}
+//read all preferences - end
 
 var menuItem = contextMenu.Item({
     label: "Speech",
@@ -24,11 +28,12 @@ pageMod.PageMod({
   onAttach: function(worker) {
     worker.port.emit("prefsChange", ttsPrefs);
     require("sdk/simple-prefs").on("", function(prefName){
-      ttsPrefs.speechLanguage = lang[pref.get(name + prefName)];
+      ttsPrefs[prefName] = pref.get(name + prefName);
       worker.port.emit("prefsChange", ttsPrefs);
     });
-    //worker.port.on("first-para", function(firstPara) {
-    //  console.log(firstPara);
-    //});
+    worker.port.on("gotVoiceList", function(voices) {
+      //TODO: get voices options and add them to preferences drop-down menu
+      //console.log(voices);
+    });
   }
 });

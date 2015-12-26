@@ -6,27 +6,67 @@
   "main": "index.js",
   "author": "ettoolong@hotmail.com",
   "engines": {
-    "firefox": ">=38.0a1",
-    "fennec": ">=38.0a1"
+    "firefox": ">=44.0",
+    "fennec": ">=44.0"
   },
   "license": "MIT",
   "keywords": [
     "jetpack"
   ],
   "preferences": [{
-    "name": "SpeechLanguage",
+    "name": "lang",
     "type": "menulist",
-    "title": "Speech Language",
+    "title": "Speech language",
     "value": 0,
-    "options": [
-        {
-            "value": 0,
-            "label": "en-US"
-        },
-        {
-            "value": 1,
-            "label": "zh-TW"
-        }
-    ]
+    "options": [{"value": 0, "label": "en-US"},
+                {"value": 1, "label": "ja-JP"},
+                {"value": 2, "label": "ko-KR"},
+                {"value": 3, "label": "fr-FR"},
+                {"value": 4, "label": "ja-JP"},
+                {"value": 5, "label": "zh-TW"},
+                {"value": 6, "label": "zh-CN"}]
+  },
+  {
+    "name": "pitch",
+    "type": "menulist",
+    "title": "Pitch of speech",
+    "value": 2,
+    "options": [{"value": 0, "label": "0"},
+                {"value": 1, "label": "0.5"},
+                {"value": 2, "label": "1"},
+                {"value": 3, "label": "1.5"},
+                {"value": 4, "label": "2"}]
+  },
+  {
+    "name": "rate",
+    "type": "menulist",
+    "title": "Speed of speech",
+    "value": 4,
+    "options": [{"value": 0, "label": "1/10 X"},
+                {"value": 1, "label": "1/8 X"},
+                {"value": 2, "label": "1/4 X"},
+                {"value": 3, "label": "1/2 X"},
+                {"value": 4, "label": "1 X"},
+                {"value": 5, "label": "2 X"},
+                {"value": 6, "label": "4 X"},
+                {"value": 7, "label": "8 X"},
+                {"value": 8, "label": "10 X"}]
+  },
+  {
+    "name": "volume",
+    "type": "menulist",
+    "title": "Volume of speech",
+    "value": 10,
+    "options": [{"value": 0, "label": "0"},
+                {"value": 1, "label": "10"},
+                {"value": 2, "label": "20"},
+                {"value": 3, "label": "30"},
+                {"value": 4, "label": "40"},
+                {"value": 5, "label": "50"},
+                {"value": 6, "label": "60"},
+                {"value": 7, "label": "70"},
+                {"value": 8, "label": "80"},
+                {"value": 9, "label": "90"},
+                {"value": 10, "label": "100"}]
   }]
 }
