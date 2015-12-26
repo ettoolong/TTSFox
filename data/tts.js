@@ -12,10 +12,12 @@ self.on("click", function(){
     ttsprefs = JSON.parse(ttsprefsStr);
   }
   var text = window.getSelection().toString();
-  var u = new SpeechSynthesisUtterance(text);
-  u.lang   = mapping.lang[ttsprefs.lang];
-  u.pitch  = mapping.pitch[ttsprefs.pitch];
-  u.rate   = mapping.rate[ttsprefs.rate];
-  u.volume = mapping.volume[ttsprefs.volume];
-  speechSynthesis.speak(u);
+  if(window.speechSynthesis){
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang   = mapping.lang[ttsprefs.lang];
+    u.pitch  = mapping.pitch[ttsprefs.pitch];
+    u.rate   = mapping.rate[ttsprefs.rate];
+    u.volume = mapping.volume[ttsprefs.volume];
+    speechSynthesis.speak(u);
+  }
 });

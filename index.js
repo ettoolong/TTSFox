@@ -2,6 +2,7 @@ var self = require('sdk/self');
 var data = self.data;
 var contextMenu = require("sdk/context-menu");
 var pageMod = require("sdk/page-mod");
+var _ = require("sdk/l10n").get;
 
 //read all preferences - start
 var name = "extensions.@ttsfox.";
@@ -12,9 +13,8 @@ for(var i=0;i<prefsList.length;++i){
   ttsPrefs[prefsList[i]] = pref.get(name + prefsList[i]);
 }
 //read all preferences - end
-
 var menuItem = contextMenu.Item({
-    label: "Speech",
+    label: _('speech_id'),
     context: contextMenu.SelectionContext(),
     contentScriptFile: data.url("tts.js"),
     onMessage: function (selectionText) {

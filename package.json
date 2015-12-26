@@ -19,12 +19,11 @@
     "title": "Speech language",
     "value": 0,
     "options": [{"value": 0, "label": "en-US"},
-                {"value": 1, "label": "ja-JP"},
-                {"value": 2, "label": "ko-KR"},
-                {"value": 3, "label": "fr-FR"},
-                {"value": 4, "label": "ja-JP"},
-                {"value": 5, "label": "zh-TW"},
-                {"value": 6, "label": "zh-CN"}]
+                {"value": 1, "label": "fr-FR"},
+                {"value": 2, "label": "ja-JP"},
+                {"value": 3, "label": "ko-KR"},
+                {"value": 4, "label": "zh-TW"},
+                {"value": 5, "label": "zh-CN"}]
   },
   {
     "name": "pitch",
