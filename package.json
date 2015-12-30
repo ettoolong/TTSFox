@@ -6,8 +6,8 @@
   "main": "index.js",
   "author": "ettoolong@hotmail.com",
   "engines": {
-    "firefox": ">=44.0",
-    "fennec": ">=44.0"
+    "firefox": ">=43.0",
+    "fennec": ">=43.0"
   },
   "license": "MIT",
   "keywords": [
