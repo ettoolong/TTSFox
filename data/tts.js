@@ -1,6 +1,6 @@
-self.on("click", function(){
+self.on('click', function(){
   var mapping = {
-    lang: ['en-US', 'zh-TW'],
+    lang: ['en-US', 'fr-FR', 'ja-JP', 'ko-KR', 'zh-TW', 'zh-CN'],
     pitch: [0, 0.5, 1.0, 1.5, 2.0],
     rate: [0.1, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 10.0],
     volume: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
