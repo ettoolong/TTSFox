@@ -15,17 +15,19 @@ for(var i=0;i<prefsList.length;++i){
 //read all preferences - end
 
 var menuItem = contextMenu.Item({
-    label: _('speech_id'),
-    context: contextMenu.SelectionContext(),
-    contentScriptFile: data.url('tts.js'),
-    onMessage: function (selectionText) {
+  label: _('speech_id'),
+  image: data.url('images/icon.svg'),
+  context: contextMenu.SelectionContext(),
+  contentScriptFile: data.url('js/context-menu.js'),
+  onMessage: function (selectionText) {
   }
 });
 
 pageMod.PageMod({
   include: ['*'],
-  contentScriptFile: data.url('content-script.js'),
+  contentScriptFile: data.url('js/content-script.js'),
   contentScriptWhen: 'ready',
+  attachTo: ['existing', 'top', 'frame'],
   onAttach: function(worker) {
     worker.port.emit('prefsChange', ttsPrefs);
     require('sdk/simple-prefs').on('', function(prefName){
