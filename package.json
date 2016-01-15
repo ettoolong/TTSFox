@@ -1,7 +1,7 @@
 {
   "title": "TTSFox",
   "name": "ttsfox",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Text to speech on Firefox",
   "main": "data/js/addon-script.js",
   "author": "ettoolong@hotmail.com",
@@ -15,23 +15,12 @@
     "jetpack"
   ],
   "permissions":{
-    "multiprocess": true
+    "multiprocess": true,
+    "private-browsing": true
   },
   "icon": "resource://@ttsfox/data/images/icon.svg",
   "icon64": "resource://@ttsfox/data/images/icon.svg",
   "preferences": [{
-    "name": "lang",
-    "type": "menulist",
-    "title": "Speech language",
-    "value": 0,
-    "options": [{"value": 0, "label": "en-US"},
-                {"value": 1, "label": "fr-FR"},
-                {"value": 2, "label": "ja-JP"},
-                {"value": 3, "label": "ko-KR"},
-                {"value": 4, "label": "zh-TW"},
-                {"value": 5, "label": "zh-CN"}]
-  },
-  {
     "name": "pitch",
     "type": "menulist",
     "title": "Pitch of speech",
@@ -47,31 +36,31 @@
     "type": "menulist",
     "title": "Speed of speech",
     "value": 4,
-    "options": [{"value": 0, "label": "1/10 X"},
-                {"value": 1, "label": "1/8 X"},
-                {"value": 2, "label": "1/4 X"},
-                {"value": 3, "label": "1/2 X"},
-                {"value": 4, "label": "1 X"},
-                {"value": 5, "label": "2 X"},
-                {"value": 6, "label": "4 X"},
-                {"value": 7, "label": "8 X"},
-                {"value": 8, "label": "10 X"}]
+    "options": [{"value": 0, "label": "s1_10"},
+                {"value": 1, "label": "s1_8"},
+                {"value": 2, "label": "s1_4"},
+                {"value": 3, "label": "s1_2"},
+                {"value": 4, "label": "s1"},
+                {"value": 5, "label": "s2"},
+                {"value": 6, "label": "s4"},
+                {"value": 7, "label": "s8"},
+                {"value": 8, "label": "s10"}]
   },
   {
     "name": "volume",
     "type": "menulist",
     "title": "Volume of speech",
     "value": 10,
-    "options": [{"value": 0, "label": "0"},
-                {"value": 1, "label": "10"},
-                {"value": 2, "label": "20"},
-                {"value": 3, "label": "30"},
-                {"value": 4, "label": "40"},
-                {"value": 5, "label": "50"},
-                {"value": 6, "label": "60"},
-                {"value": 7, "label": "70"},
-                {"value": 8, "label": "80"},
-                {"value": 9, "label": "90"},
-                {"value": 10, "label": "100"}]
+    "options": [{"value": 0, "label": "1%"},
+                {"value": 1, "label": "10%"},
+                {"value": 2, "label": "20%"},
+                {"value": 3, "label": "30%"},
+                {"value": 4, "label": "40%"},
+                {"value": 5, "label": "50%"},
+                {"value": 6, "label": "60%"},
+                {"value": 7, "label": "70%"},
+                {"value": 8, "label": "80%"},
+                {"value": 9, "label": "90%"},
+                {"value": 10, "label": "100%"}]
   }]
 }

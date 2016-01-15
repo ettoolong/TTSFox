@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+"-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-US">
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title></title>
+    <style type="text/css" media="all">
+      body {
+          user-select: none;
+          background: #eee;
+      }
+      .itemDiv {
+          display: block;
+          margin-top:4px;
+      }
+      .itemLabel {
+          display: inline-block;
+          width: 60px;
+      }
+      input.itemInput {
+          display: inline-block;
+          width: 150px;
+          font-size: 1em;
+          color: #444;
+          border-bottom-color: #ddd;
+      }
+      select.itemInput {
+          display: inline-block;
+          width: 250px;
+          margin-left:12px;
+      }
+      textarea {
+          width:380px;
+          height:150px;
+          resize: none;
+      }
+    </style>
+    <script>
+      var ttsfox = {
+        ttsprefs: {pitch: 2, rate: 4, volume: 10}, //initian all preferences to default value
+        prefsMapping: {
+          pitch: [0, 0.5, 1.0, 1.5, 2.0],
+          rate: [0.1, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 10.0],
+          volume: [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+          //voice: [] base on system
+        },
+        voices: [],
+        speech: function(text, setting) {
+          if(window.speechSynthesis){
+            setting = setting || {};
+            var u = new window.SpeechSynthesisUtterance(text);
+            u.pitch  = setting.pitch || this.prefsMapping.pitch[this.ttsprefs.pitch];
+            u.rate   = setting.rate || this.prefsMapping.rate[this.ttsprefs.rate];
+            u.volume = setting.volume || this.prefsMapping.volume[this.ttsprefs.volume];
+            u.voice  = this.voices[setting.voice];
+            //u.lang   = this.voices[setting.voice].lang;
+            window.speechSynthesis.speak(u);
+          }
+        }
+      };
+      function speech() {
+        if(ttsfox.voices && ttsfox.voices.length) {
+          ttsfox.speech(speechText.value, {
+            voice: document.getElementById('input_voice').selectedIndex,
+            pitch: ttsfox.prefsMapping.pitch[document.getElementById('input_pitch').value],
+            rate: ttsfox.prefsMapping.rate[document.getElementById('input_rate').value],
+            volume: ttsfox.prefsMapping.volume[document.getElementById('input_volume').value]
+          });
+        } else {
+          //TODO: show alert
+        }
+      }
+      function startup() {
+        if(window.speechSynthesis){
+          ttsfox.voices = window.speechSynthesis.getVoices() || [];
+          var voices = ttsfox.voices;
+          var input_voice = document.getElementById('input_voice');
+          for(i = 0; i < voices.length ; i++) {
+            var option = document.createElement('option');
+            option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
+
+            if(voices[i].default) {
+              option.textContent += ' -- DEFAULT';
+            }
+
+            option.setAttribute('data-lang', voices[i].lang);
+            option.setAttribute('data-name', voices[i].name);
+            input_voice.appendChild(option);
+          }
+        }
+        document.body.addEventListener("addon-message", function(event) {
+          var speechText = document.getElementById('speechText');
+          var detail = JSON.parse(event.detail);
+          if(detail.cmd == 'setData') {
+            ttsfox.ttsprefs = window.ttsData.prefs;
+            ttsfox.l10n = window.ttsData.l10n;
+            document.getElementById('input_pitch').value = ttsfox.ttsprefs.pitch;
+            document.getElementById('input_rate').value = ttsfox.ttsprefs.rate;
+            document.getElementById('input_volume').value = ttsfox.ttsprefs.volume;
+
+            if(window.ttsData.text){
+              var speechText = document.getElementById('speechText');
+              speechText.value = window.ttsData.text;
+            }
+          } else if(detail.cmd == 'setText') {
+            speechText.value = detail.text;
+          }
+        }, false);
+      }
+      window.addEventListener('load', startup, true);
+      function setLabelText(value, name) {
+        var elem = document.getElementById(name + '_value');
+        var prefsMapping = {
+          pitch: [0, 0.5, 1.0, 1.5, 2.0],
+          volume: ['1%', '10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%', '100%']
+        }
+        if(name == 'rate')
+          elem.innerHTML = ttsfox.l10n.rate[value];
+        else
+          elem.innerHTML = prefsMapping[name][value];
+      }
+    </script>
+  </head>
+  <body>
+    <div style="width:730px;height:200px;background:#eee">
+    <div>
+      <div style="display:inline-block;width:330px;">
+        <div class="itemDiv">
+          <span class="itemLabel" data-l10n-id="voice_title">voice_title</span>
+          <select id="input_voice" class="itemInput">
+          </select>
+        </div>
+        <div class="itemDiv">
+          <span class="itemLabel" data-l10n-id="pitch_title">pitch_title</span>
+          <input id="input_pitch" class="itemInput" type="range" min="0" max="4" value="2" step="1" oninput="setLabelText(this.value, 'pitch')" /><span id="pitch_value"></span>
+        </div>
+        <div class="itemDiv">
+          <span class="itemLabel" data-l10n-id="rate_title">rate_title</span>
+          <input id="input_rate" class="itemInput" type="range" min="0" max="8" value="4" step="1" oninput="setLabelText(this.value, 'rate')" /><span id="rate_value"></span>
+        </div>
+        <div class="itemDiv">
+          <span class="itemLabel" data-l10n-id="volume_title">volume_title</span>
+          <input id="input_volume" class="itemInput" type="range" min="0" max="10" value="10" step="1" oninput="setLabelText(this.value, 'volume')" /><span id="volume_value"></span>
+        </div>
+      </div>
+      <div style="display:inline-block;">
+        <textarea id='speechText'></textarea>
+      </div>
+    </div>
+    <div style="margin:5px 10px 5px 0px;text-align:right">
+      <button type="button" data-l10n-id="speech_id" onclick="speech()"></button>
+    </div>
+    </div>
+  </body>
+</html>
