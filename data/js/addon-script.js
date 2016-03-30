@@ -68,7 +68,7 @@ TTS.prototype.openDlg = function(selectionText){
     });
 
     this.win.addEventListener('load', function () {
-      tabs.activeTab.on('ready', function (tab) {
+      tabs.activeTab.on('load', function (tab) {
         this.worker = tab.attach({
           contentScriptFile: data.url('js/content-script.js')
         });
@@ -119,6 +119,7 @@ var menuItem = contextMenu.Item({
   image: data.url('images/icon.svg'),
   context: contextMenu.SelectionContext(),
   contentScriptFile: data.url('js/context-menu.js'),
+  accesskey: 'v',
   onMessage: function (selectionText) {
     tts.openDlg(selectionText);
   }.bind(this)

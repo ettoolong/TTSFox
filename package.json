@@ -1,7 +1,7 @@
 {
   "title": "TTSFox",
   "name": "ttsfox",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Text to speech on Firefox",
   "main": "data/js/addon-script.js",
   "author": "ettoolong@hotmail.com",
