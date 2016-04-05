@@ -1,14 +1,14 @@
 {
   "title": "TTSFox",
   "name": "ttsfox",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Text to speech on Firefox",
   "main": "data/js/addon-script.js",
   "author": "ettoolong@hotmail.com",
   "homepage": "https://github.com/ettoolong/TTSFox",
   "engines": {
-    "firefox": ">=43.0",
-    "fennec": ">=43.0"
+    "firefox": ">=45.0",
+    "fennec": ">=45.0"
   },
   "license": "MIT",
   "keywords": [
@@ -62,5 +62,8 @@
                 {"value": 8, "label": "80%"},
                 {"value": 9, "label": "90%"},
                 {"value": 10, "label": "100%"}]
-  }]
+  }],
+  "contributors":[
+    "nizibaba"
+  ]
 }

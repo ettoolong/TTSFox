@@ -1,15 +1,16 @@
-var self = require('sdk/self');
-var data = self.data;
-var contextMenu = require('sdk/context-menu');
-var workers = require('sdk/content/worker');
-var tabs = require('sdk/tabs');
-var _ = require('sdk/l10n').get;
+let self = require('sdk/self');
+let data = self.data;
+let {components, Cu, Cc, Ci} = require("chrome");
+let contextMenu = require('sdk/context-menu');
+let tabs = require('sdk/tabs');
+let _ = require('sdk/l10n').get;
 
 //read all preferences - start
 var name = 'extensions.@ttsfox.';
 var pref = require('sdk/preferences/service');
 var ttsPrefs = {};
 var prefsList = ['pitch', 'rate', 'volume'];
+
 for(var i=0;i<prefsList.length;++i){
   ttsPrefs[prefsList[i]] = pref.get(name + prefsList[i]);
 }
@@ -124,3 +125,55 @@ var menuItem = contextMenu.Item({
     tts.openDlg(selectionText);
   }.bind(this)
 });
+
+exports.main = function (options, callbacks) {
+  let synthEnabled = pref.get('media.webspeech.synth.enabled');
+  let utils = require('sdk/window/utils');
+  let active = utils.getMostRecentBrowserWindow();
+  let { viewFor } = require("sdk/view/core");
+
+  if(!synthEnabled) {
+    pref.set('media.webspeech.synth.enabled', true);
+    let chromeWin = viewFor(active);
+
+    let notifyBox = chromeWin.gBrowser.getNotificationBox();
+    let buttons = [{
+        isDefault: false,
+        label: _("moreInfo"),
+        callback: function(theNotification, buttonInfo, eventTarget){
+          let tabs = require("sdk/tabs");
+          tabs.open({
+            url: 'https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis'
+          });
+          return true;
+        },
+        type: "", // If a popup, then must be: "menu-button" or "menu".
+        popup: null
+    },
+    {
+        isDefault: false,
+        label: _("restartLater"),
+        callback: function(theNotification, buttonInfo, eventTarget){
+        },
+        type: "", // If a popup, then must be: "menu-button" or "menu".
+        popup: null
+    },
+    {
+        isDefault: true,
+        label: _("restartNow"),
+        callback: function(theNotification, buttonInfo, eventTarget){
+          Cc['@mozilla.org/toolkit/app-startup;1'].getService(Ci.nsIAppStartup)
+              .quit(Ci.nsIAppStartup.eAttemptQuit | Ci.nsIAppStartup.eRestart);
+        },
+        type: "", // If a popup, then must be: "menu-button" or "menu".
+        popup: null
+    }];
+    //appendNotification( label , value , image (URL) , priority , buttons, eventCallback )
+    notifyBox.appendNotification(_("needRestart"), "Enable TTS API support",
+                                 data.url('images/icon.svg'),
+                                 notifyBox.PRIORITY_INFO_HIGH, buttons,
+                                 function(reason){
+                                   //console.log("Reason is: " + reason);
+                                 });
+  }
+}
