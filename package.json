@@ -7,8 +7,8 @@
   "author": "ettoolong@hotmail.com",
   "homepage": "https://github.com/ettoolong/TTSFox",
   "engines": {
-    "firefox": ">=45.0",
-    "fennec": ">=45.0"
+    "firefox": ">=43.0",
+    "fennec": ">=43.0"
   },
   "license": "MIT",
   "keywords": [
