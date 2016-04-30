@@ -107,7 +107,9 @@ function startup() {
       document.getElementById("input_pitch").value = ttsfox.ttsprefs.pitch;
       document.getElementById("input_rate").value = ttsfox.ttsprefs.rate;
       document.getElementById("input_volume").value = ttsfox.ttsprefs.volume;
-
+      setLabelText(ttsfox.ttsprefs.pitch, "pitch");
+      setLabelText(ttsfox.ttsprefs.rate, "rate");
+      setLabelText(ttsfox.ttsprefs.volume, "volume");
       if(window.ttsData.text){
         var speechText = document.getElementById("speechText");
         speechText.value = window.ttsData.text;
@@ -125,12 +127,17 @@ function setLabelText(value, name) {
     pitch: [0, 0.5, 1.0, 1.5, 2.0],
     volume: ["1%", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"]
   }
+  while(elem.firstChild) {
+    elem.removeChild(elem.firstChild);
+  }
+  var textNode;
   if(name == "rate") {
-    elem.innerHTML = ttsfox.l10n.rate[value];
+    textNode = document.createTextNode(ttsfox.l10n.rate[value]);
   }
   else {
-    elem.innerHTML = prefsMapping[name][value];
+    textNode = document.createTextNode(prefsMapping[name][value]);
   }
+  elem.appendChild(textNode);
 }
 
 window.addEventListener("load", startup, true);

@@ -1,4 +1,5 @@
 self.port.on('setData', function (ttsData) {
+  //https://blog.mozilla.org/addons/2014/04/10/changes-to-unsafewindow-for-the-add-on-sdk/
   unsafeWindow.ttsData = cloneInto(ttsData, unsafeWindow);
   var data = {
     cmd : 'setData'

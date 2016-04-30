@@ -51,7 +51,7 @@ tts = {
       this.win = require("sdk/window/utils").openDialog({
         features: Object.keys({
           minimizable: true,
-          chrome: true,
+          chrome: false,
           //toolbar: true,
           titlebar: true,
           alwaysRaised: true,
@@ -114,11 +114,14 @@ require("sdk/ui/button/action").ActionButton({
 let menuItem = contextMenu.Item({
   label: _("speech_id"),
   image: data.url("images/icon.svg"),
-  context: contextMenu.SelectionContext(),
+  context: contextMenu.PredicateContext(function(context){
+    tts.selectionText = context.selectionText;
+    return !!context.selectionText;
+  }),
   contentScriptFile: data.url("js/context-menu.js"),
   accesskey: "v",
-  onMessage: function (selectionText) {
-    tts.openDlg(selectionText);
+  onMessage: function () {
+    tts.openDlg(tts.selectionText);
   }.bind(this)
 });
 

@@ -7,7 +7,7 @@
   "author": "ettoolong@hotmail.com",
   "homepage": "https://addons.mozilla.org/zh-TW/firefox/user/ett-chung/",
   "engines": {
-    "firefox": ">=45.0"
+    "firefox": "45.0 - 47.*"
   },
   "license": "MIT",
   "keywords": [
