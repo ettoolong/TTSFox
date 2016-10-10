@@ -1,7 +1,7 @@
 {
   "title": "TTSFox",
   "name": "ttsfox",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Text to Speech on Firefox. It use OS build-in TTS engines, you can use it even when offline.",
   "main": "data/js/addon-script.js",
   "author": "ettoolong@hotmail.com",

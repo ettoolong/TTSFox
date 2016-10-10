@@ -1,4 +1,5 @@
 var ttsfox = {
+  initCount: 0,
   ttsprefs: {pitch: 2, rate: 4, volume: 10}, //initian all preferences to default value
   prefsMapping: {
     pitch: [0, 0.5, 1.0, 1.5, 2.0],
@@ -80,23 +81,34 @@ function cancel() {
 
 function startup() {
   if(window.speechSynthesis){
-    ttsfox.voices = window.speechSynthesis.getVoices() || [];
-    var voices = ttsfox.voices;
-    var input_voice = document.getElementById("input_voice");
-    for(var i = 0; i < voices.length ; i++) {
-      var option = document.createElement("option");
-      option.textContent = voices[i].name + " (" + voices[i].lang + ")";
 
-      //if(voices[i].default) {
-      //  option.textContent += ' -- DEFAULT';
-      //}
-      option.setAttribute("data-lang", voices[i].lang);
-      option.setAttribute("data-name", voices[i].name);
-      input_voice.appendChild(option);
-      if(voices[i].lang == "en-US") {
-        option.selected = true;
+    function tryInit() {
+      var voices = window.speechSynthesis.getVoices() || [];
+      if(voices.length) {
+        ttsfox.voices = voices;
+        var input_voice = document.getElementById("input_voice");
+        for(var i = 0; i < voices.length ; i++) {
+          var option = document.createElement("option");
+          option.textContent = voices[i].name + " (" + voices[i].lang + ")";
+
+          //if(voices[i].default) {
+          //  option.textContent += ' -- DEFAULT';
+          //}
+          option.setAttribute("data-lang", voices[i].lang);
+          option.setAttribute("data-name", voices[i].name);
+          input_voice.appendChild(option);
+          if(voices[i].lang == "en-US") {
+            option.selected = true;
+          }
+        }
+      }
+      else {
+        ttsfox.initCount++;
+        if(ttsfox.initCount<100)
+          setTimeout(tryInit, 100);
       }
     }
+    setTimeout(tryInit, 100);
   }
   document.body.addEventListener("addon-message", function(event) {
     var speechText = document.getElementById("speechText");

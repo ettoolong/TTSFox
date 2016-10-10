@@ -9,7 +9,7 @@ let name = "extensions.@ttsfox.";
 let pref = require("sdk/preferences/service");
 let prefsList = ["pitch", "rate", "volume"];
 
-tts = {
+let tts = {
   ttsPrefs: {},
   setTitle: function(){
     if(this.win) {
