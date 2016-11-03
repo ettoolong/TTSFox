@@ -1,13 +1,13 @@
 {
   "title": "TTSFox",
   "name": "ttsfox",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Text to Speech on Firefox. It use OS build-in TTS engines, you can use it even when offline.",
   "main": "data/js/addon-script.js",
   "author": "ettoolong@hotmail.com",
   "homepage": "https://addons.mozilla.org/zh-TW/firefox/user/ett-chung/",
   "engines": {
-    "firefox": "45.0 - 47.*"
+    "firefox": ">=45.0"
   },
   "license": "MIT",
   "keywords": [
@@ -61,6 +61,13 @@
                 {"value": 8, "label": "80%"},
                 {"value": 9, "label": "90%"},
                 {"value": 10, "label": "100%"}]
+  },
+  {
+    "name": "autoStartSpeech",
+    "type": "bool",
+    "title": "Auto start speech",
+    "value": false,
+    "description": "Auto start speech when the TTS window popup."
   }],
   "contributors":[
     "nizibaba"

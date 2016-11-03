@@ -5,9 +5,25 @@ let contextMenu = require("sdk/context-menu");
 let tabs = require("sdk/tabs");
 let _ = require("sdk/l10n").get;
 
-let name = "extensions.@ttsfox.";
+let prefPath = "extensions.@ttsfox.";
 let pref = require("sdk/preferences/service");
-let prefsList = ["pitch", "rate", "volume"];
+let prefsList = ["pitch", "rate", "volume", "autoStartSpeech"];
+
+let { Hotkey } = require("sdk/hotkeys");
+
+var ttsHotKey = Hotkey({
+  combo: "accel-shift-v",
+  onPress: function() {
+    let worker = tabs.activeTab.attach({
+      contentScriptFile: data.url("js/getSelectText.js"),
+      onMessage: text => {
+        tts.selectionText = text;
+        tts.openDlg(tts.selectionText);
+        worker.destroy();
+      }
+    });
+  }
+});
 
 let tts = {
   ttsPrefs: {},
@@ -45,7 +61,7 @@ let tts = {
     //https://github.com/mozilla/addon-sdk/blob/master/lib/sdk/window/utils.js
     this.setTitle();
     if(this.win) {
-      this.worker.port.emit("setText", selectionText);
+      this.worker.port.emit("setText", {text: selectionText, autoStart: tts.ttsPrefs.autoStartSpeech});
     }
     if(!this.win) {
       this.win = require("sdk/window/utils").openDialog({
@@ -70,6 +86,7 @@ let tts = {
           this.worker.port.emit("setData", {
             prefs: this.ttsPrefs,
             text: selectionText,
+            autoStart: tts.ttsPrefs.autoStartSpeech,
             l10n: {rate:{
               "0":_("rate_options.s1_10"),
               "1":_("rate_options.s1_8"),
@@ -94,9 +111,12 @@ let tts = {
   }
 };
 
-for(let i=0; i < prefsList.length; ++i){
-  tts.ttsPrefs[prefsList[i]] = pref.get(name + prefsList[i]);
+for(let prefName of prefsList){
+  tts.ttsPrefs[prefName] = pref.get(prefPath + prefName);
 }
+require("sdk/simple-prefs").on("", function(prefName){
+  tts.ttsPrefs[prefName] = pref.get(prefPath + prefName);
+});
 
 require("sdk/ui/button/action").ActionButton({
   id: "show-ttsPanel",
@@ -107,7 +127,15 @@ require("sdk/ui/button/action").ActionButton({
     "64": data.url("images/icon.svg")
   },
   onClick:function handleClick(state) {
-    tts.openDlg();
+    let worker = tabs.activeTab.attach({
+      contentScriptFile: data.url("js/getSelectText.js"),
+      onMessage: text => {
+        tts.selectionText = text;
+        tts.openDlg(tts.selectionText);
+        worker.destroy();
+      }
+    });
+
   }
 });
 

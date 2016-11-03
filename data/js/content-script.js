@@ -8,10 +8,11 @@ self.port.on('setData', function (ttsData) {
   document.body.dispatchEvent(evt);
 });
 
-self.port.on('setText', function (text) {
+self.port.on('setText', function (data) {
   var data = {
     cmd : 'setText',
-    text: text
+    text: data.text,
+    autoStart: data.autoStart
   };
   var evt = new CustomEvent('addon-message', { bubbles: false, detail: JSON.stringify(data) });
   document.body.dispatchEvent(evt);

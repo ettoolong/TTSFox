@@ -101,6 +101,9 @@ function startup() {
             option.selected = true;
           }
         }
+        if(ttsfox.autoStart) {
+          speech();
+        }
       }
       else {
         ttsfox.initCount++;
@@ -116,6 +119,7 @@ function startup() {
     if(detail.cmd == "setData") {
       ttsfox.ttsprefs = window.ttsData.prefs;
       ttsfox.l10n = window.ttsData.l10n;
+      ttsfox.autoStart = window.ttsData.autoStart;
       document.getElementById("input_pitch").value = ttsfox.ttsprefs.pitch;
       document.getElementById("input_rate").value = ttsfox.ttsprefs.rate;
       document.getElementById("input_volume").value = ttsfox.ttsprefs.volume;
@@ -129,6 +133,10 @@ function startup() {
     }
     else if(detail.cmd == "setText") {
       speechText.value = detail.text;
+      if(detail.autoStart) {
+        cancel();
+        speech();
+      }
     }
   }, false);
 }
