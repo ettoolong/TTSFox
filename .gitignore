@@ -1,7 +1,6 @@
 COSX
 .DS_Store
 
-
 # OS generated files #
 ######################
 */.DS_Store
@@ -19,3 +18,6 @@ Thumbs.db
 # it's better to unpack these files and commit the raw source
 # git has its own built in compression methods
 *.xpi
+node_modules
+web-ext-artifacts/*.zip
+web-ext-artifacts/*.xpi

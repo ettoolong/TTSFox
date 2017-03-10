@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="ttsPanel.css"/>
+    <script id="ttsfox-option" type="text/javascript" src="ttsPanel.js"></script>
+    <title></title>
+  </head>
+  <body>
+    <div>
+      <div style="display:inline-block;width:330px;">
+        <div class="itemDiv">
+          <span class="itemLabel" data-l10n-id="voice">Voice</span>
+          <select id="voice" type="option" class="itemInput">
+          </select>
+        </div>
+        <div class="itemDiv">
+          <span class="itemLabel" data-l10n-id="pitch">Pitch</span>
+          <input id="pitch" class="itemInput" type="range" min="0" max="4" value="2" step="1"/><span id="pitch_value"></span>
+        </div>
+        <div class="itemDiv">
+          <span class="itemLabel" data-l10n-id="rate">Speed</span>
+          <input id="rate" class="itemInput" type="range" min="0" max="8" value="4" step="1"/><span id="rate_value"></span>
+        </div>
+        <div class="itemDiv">
+          <span class="itemLabel" data-l10n-id="volume">Volume</span>
+          <input id="volume" class="itemInput" type="range" min="0" max="10" value="10" step="1"/><span id="volume_value"></span>
+        </div>
+        <div class="itemDiv">
+          <input type="checkbox" id="autoStartSpeech">
+          <label for="autoStartSpeech" data-l10n-id="autoStartSpeech">Auto start speech</label>
+        </div>
+        <div class="itemDiv">
+          <input type="checkbox" id="contextMenuEnabled">
+          <label for="contextMenuEnabled" data-l10n-id="contextMenuEnabled">Enable context menu</label>
+        </div>
+        <div class="itemDiv">
+          <div id="contextMenuAction" type="radioGroup">
+            <label data-l10n-id="contextMenuAction">Context menu action</label>
+            <input type="radio" id="contextMenuAction1" name="contextMenuAction" value="0">
+            <label for="contextMenuAction1" data-l10n-id="action1">Enable context menu</label>
+            <input type="radio" id="contextMenuAction2" name="contextMenuAction" value="1">
+            <label for="contextMenuAction2" data-l10n-id="action2">Enable context menu</label>
+          </div>
+        </div>
+        <div class="itemDiv">
+          <div id="hotkeyAction" type="radioGroup">
+            <label data-l10n-id="hotkeyAction">Hotkey action</label>
+            <input type="radio" id="hotkeyAction1" name="hotkeyAction" value="0">
+            <label for="hotkeyAction1" data-l10n-id="action1">Enable context menu</label>
+            <input type="radio" id="hotkeyAction2" name="hotkeyAction" value="1">
+            <label for="hotkeyAction2" data-l10n-id="action2">Enable context menu</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

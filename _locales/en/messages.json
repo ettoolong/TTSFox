@@ -1,0 +1,102 @@
+{
+	"extName": {
+		"message": "TTSFox",
+		"description": ""
+	},
+	"extDescription": {
+		"message": "Text to Speech on Firefox. It use OS build-in TTS engines, you can use it even when offline.",
+		"description": ""
+	},
+	"actionButtonTitle": {
+		"message": "Speech",
+		"description": ""
+	},
+	"contextMenuItemTitle": {
+		"message": "Speech",
+		"description": ""
+	},
+	"voice": {
+		"message": "Voice",
+		"description": ""
+	},
+	"pitch": {
+		"message": "Pitch",
+		"description": ""
+	},
+	"rate": {
+		"message": "Speed",
+		"description": ""
+	},
+	"volume": {
+		"message": "Volume",
+		"description": ""
+	},
+	"speech": {
+		"message": "Speech",
+		"description": ""
+	},
+	"cancel": {
+		"message": "Cancel",
+		"description": ""
+	},
+	"rateS0": {
+		"message": "1/10 X",
+		"description": ""
+	},
+	"rateS1": {
+		"message": "1/8 X",
+		"description": ""
+	},
+	"rateS2": {
+		"message": "1/4 X",
+		"description": ""
+	},
+	"rateS3": {
+		"message": "1/2 X",
+		"description": ""
+	},
+	"rateS4": {
+		"message": "1 X",
+		"description": ""
+	},
+	"rateS5": {
+		"message": "2 X",
+		"description": ""
+	},
+	"rateS6": {
+		"message": "4 X",
+		"description": ""
+	},
+	"rateS7": {
+		"message": "5 X",
+		"description": ""
+	},
+	"rateS8": {
+		"message": "10 X",
+		"description": ""
+	},
+	"autoStartSpeech": {
+		"message": "Auto start speech when speech window opened",
+		"description": ""
+	},
+	"contextMenuEnabled": {
+		"message": "Enable context menu",
+		"description": ""
+	},
+    "action1": {
+		"message": "Open speech window",
+		"description": ""
+	},
+    "action2": {
+		"message": "Speech selected text",
+		"description": ""
+	},
+    "contextMenuAction": {
+		"message": "Context menu action",
+		"description": ""
+	},
+    "hotkeyAction": {
+		"message": "Hotkey action",
+		"description": ""
+	}
+}

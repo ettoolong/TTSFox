@@ -1,0 +1,102 @@
+{
+	"extName": {
+		"message": "TTSFox",
+		"description": ""
+	},
+	"extDescription": {
+		"message": "文字转语音套件。使用作业系统内建的文字转语音引擎，不连接网路时也可使用。",
+		"description": ""
+	},
+	"actionButtonTitle": {
+		"message": "朗读",
+		"description": ""
+	},
+	"contextMenuItemTitle": {
+		"message": "朗读",
+		"description": ""
+	},
+	"voice": {
+		"message": "语音",
+		"description": ""
+	},
+	"pitch": {
+		"message": "音高",
+		"description": ""
+	},
+	"rate": {
+		"message": "速度",
+		"description": ""
+	},
+	"volume": {
+		"message": "音量",
+		"description": ""
+	},
+	"speech": {
+		"message": "朗读",
+		"description": ""
+	},
+	"cancel": {
+		"message": "取消",
+		"description": ""
+    },
+	"rateS0": {
+		"message": "非常慢",
+		"description": ""
+	},
+	"rateS1": {
+		"message": "很慢",
+		"description": ""
+	},
+	"rateS2": {
+		"message": "慢",
+		"description": ""
+	},
+	"rateS3": {
+		"message": "稍慢",
+		"description": ""
+	},
+	"rateS4": {
+		"message": "正常",
+		"description": ""
+	},
+	"rateS5": {
+		"message": "稍快",
+		"description": ""
+	},
+	"rateS6": {
+		"message": "快",
+		"description": ""
+	},
+	"rateS7": {
+		"message": "很快",
+		"description": ""
+	},
+	"rateS8": {
+		"message": "非常快",
+		"description": ""
+	},
+	"autoStartSpeech": {
+		"message": "开启朗读视窗后自动开始朗读",
+		"description": ""
+	},
+	"contextMenuEnabled": {
+		"message": "激活右键选单",
+		"description": ""
+	},
+    "action1": {
+		"message": "开启朗读视窗",
+		"description": ""
+	},
+    "action2": {
+		"message": "直接朗读",
+		"description": ""
+	},
+    "contextMenuAction": {
+		"message": "右键选单动作",
+		"description": ""
+	},
+    "hotkeyAction": {
+		"message": "快捷键动作",
+		"description": ""
+	}
+}

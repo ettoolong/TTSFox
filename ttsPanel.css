@@ -1,3 +1,9 @@
+html, body {
+  width: 730px;
+  height: 210px;
+  /*overflow: hidden;*/
+}
+
 body {
   user-select: none;
   background: #eee;
@@ -29,6 +35,6 @@ select.itemInput {
 
 textarea {
   width:380px;
-  height:150px;
+  height:160px;
   resize: none;
 }

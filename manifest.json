@@ -1,0 +1,65 @@
+{
+  "description": "__MSG_extDescription__",
+  "manifest_version": 2,
+  "name": "__MSG_extName__",
+  "version": "0.0.10",
+  "homepage_url": "https://github.com/softcup/New-Tongwentang-for-Firefox",
+  "icons": {
+    "16": "icon/icon.svg",
+    "32": "icon/icon.svg",
+    "48": "icon/icon.svg",
+    "128": "icon/icon.svg"
+  },
+
+  "applications": {
+    "gecko": {
+      "id": "@ttsfox",
+      "strict_min_version": "51.0"
+    }
+  },
+
+  "author": "Ett Chung",
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "content-script.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+
+  "browser_action": {
+    "browser_style": true,
+    "default_title": "__MSG_actionButtonTitle__",
+    "default_icon": "icon/icon.svg"
+  },
+
+  "commands": {
+    "speech": {
+      "description": "__MSG_actionButtonTitle__",
+      "suggested_key": {
+        "default": "Ctrl+Shift+V"
+      }
+    }
+  },
+
+  "permissions": [
+    "<all_urls>",
+    "storage",
+    "tabs",
+    "contextMenus"
+  ],
+
+  "default_locale": "en",
+
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  }
+}
