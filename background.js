@@ -14,6 +14,7 @@ let menuId = null;
 let preferences = {};
 let dialog = null;
 let tab = null;
+let initCount = 0;
 let allVoices = {};
 let prefsMapping = {
   pitch: [0, 0.5, 1.0, 1.5, 2.0],
