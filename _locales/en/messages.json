@@ -39,6 +39,14 @@
 		"message": "Cancel",
 		"description": ""
 	},
+	"pause": {
+		"message": "Pause",
+		"description": ""
+	},
+	"resume": {
+		"message": "Resume",
+		"description": ""
+	},
 	"rateS0": {
 		"message": "1/10 X",
 		"description": ""

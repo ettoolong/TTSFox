@@ -38,7 +38,15 @@
 	"cancel": {
 		"message": "取消",
 		"description": ""
-    },
+  },
+	"pause": {
+		"message": "暂停",
+		"description": ""
+	},
+	"resume": {
+		"message": "继续",
+		"description": ""
+	},
 	"rateS0": {
 		"message": "非常慢",
 		"description": ""

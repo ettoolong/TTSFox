@@ -2,7 +2,7 @@
   "description": "__MSG_extDescription__",
   "manifest_version": 2,
   "name": "__MSG_extName__",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "homepage_url": "https://github.com/softcup/New-Tongwentang-for-Firefox",
   "icons": {
     "16": "icon/icon.svg",
@@ -14,7 +14,7 @@
   "applications": {
     "gecko": {
       "id": "@ttsfox",
-      "strict_min_version": "51.0"
+      "strict_min_version": "56.0"
     }
   },
 
@@ -60,6 +60,7 @@
 
   "options_ui": {
     "page": "options.html",
-    "open_in_tab": false
+    "open_in_tab": false,
+    "browser_style": false
   }
 }

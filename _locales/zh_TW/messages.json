@@ -39,6 +39,14 @@
 		"message": "取消",
 		"description": ""
 	},
+	"pause": {
+		"message": "暫停",
+		"description": ""
+	},
+	"resume": {
+		"message": "繼續",
+		"description": ""
+	},
 	"rateS0": {
 		"message": "非常慢",
 		"description": ""

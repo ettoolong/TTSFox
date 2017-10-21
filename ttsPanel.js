@@ -16,6 +16,16 @@ let ttsfox = {
       window.speechSynthesis.cancel();
     }
   },
+  pause: function() {
+    if(window.speechSynthesis) {
+      window.speechSynthesis.pause();
+    }
+  },
+  resume: function() {
+    if(window.speechSynthesis) {
+      window.speechSynthesis.resume();
+    }
+  },
   speech: function(text, setting) {
     if(window.speechSynthesis) {
       setting = setting || {};
@@ -26,16 +36,34 @@ let ttsfox = {
       u.voice  = this.voices[setting.voice];
       //u.lang   = this.voices[setting.voice].lang;
 
+      u.onpause = function(event) {
+        document.getElementById('btnResume').style.display = 'inline-block';
+        document.getElementById('btnPause').style.display = 'none';
+      }
+
+      u.onresume = function(event) {
+        document.getElementById('btnPause').style.display = 'inline-block';
+        document.getElementById('btnResume').style.display = 'none';
+        let speechText = document.getElementById('speechText');
+        speechText.focus();
+      }
+
       u.onstart = function(event) {
         document.getElementById('btnSpeech').style.display = 'none';
         document.getElementById('btnCancel').style.display = 'inline-block';
+        document.getElementById('btnPause').removeAttribute('disabled');
+        document.getElementById('btnResume').style.display = 'none';
         let speechText = document.getElementById('speechText');
         speechText.readOnly = true;
         speechText.focus();
       }
+
       u.onend = function(event) {
         document.getElementById('btnCancel').style.display = 'none';
         document.getElementById('btnSpeech').style.display = 'inline-block';
+        document.getElementById('btnPause').setAttribute('disabled', true);
+        document.getElementById('btnPause').style.display = 'inline-block';
+        document.getElementById('btnResume').style.display = 'none';
         let speechText = document.getElementById('speechText');
         speechText.setSelectionRange(0, 0);
         speechText.readOnly = false;
@@ -94,6 +122,14 @@ const speech = () => {
 const cancel = () => {
   ttsfox.cancel();
 };
+
+const pause = () => {
+  ttsfox.pause();
+}
+
+const resume = () => {
+  ttsfox.resume();
+}
 
 const tryInit = () => {
   let voices = window.speechSynthesis.getVoices() || [];
@@ -159,6 +195,8 @@ const startup = () => {
     browser.storage.onChanged.addListener(storageChangeHandler);
     document.getElementById('btnSpeech').addEventListener('click', speech, false);
     document.getElementById('btnCancel').addEventListener('click', cancel, false);
+    document.getElementById('btnPause').addEventListener('click', pause, false);
+    document.getElementById('btnResume').addEventListener('click', resume, false);
     document.getElementById('speechText').value = currentPrefs.cacheText;
   }
   else {

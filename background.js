@@ -147,21 +147,28 @@ const createContextMenu = () => {
     title: browser.i18n.getMessage('contextMenuItemTitle'),
     contexts: ['selection'],
     onclick: (data) => {
+      //
+      if(preferences.contextMenuAction === 0) {
+        openDialog(data.selectionText);
+      }
+      else if(preferences.contextMenuAction === 1) {
+        speech(data.selectionText);
+      }
       //don't use data.selectionText, because it's max length is 150 character.
-      getActiveTab( tab => {
-        if(tab) {
-          getSelectionText(tab, selectionText => {
-            if(selectionText) {
-              if(preferences.contextMenuAction === 0) {
-                openDialog(selectionText);
-              }
-              else if(preferences.contextMenuAction === 1) {
-                speech(selectionText);
-              }
-            }
-          });
-        }
-      });
+      // getActiveTab( tab => {
+      //   if(tab) {
+      //     getSelectionText(tab, selectionText => {
+      //       if(selectionText) {
+      //         if(preferences.contextMenuAction === 0) {
+      //           openDialog(selectionText);
+      //         }
+      //         else if(preferences.contextMenuAction === 1) {
+      //           speech(selectionText);
+      //         }
+      //       }
+      //     });
+      //   }
+      // });
     }
   });
 }
