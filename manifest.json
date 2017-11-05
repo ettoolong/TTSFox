@@ -3,7 +3,7 @@
   "manifest_version": 2,
   "name": "__MSG_extName__",
   "version": "0.0.12",
-  "homepage_url": "https://github.com/softcup/New-Tongwentang-for-Firefox",
+  "homepage_url": "https://github.com/ettoolong/TTSFox",
   "icons": {
     "16": "icon/icon.svg",
     "32": "icon/icon.svg",
