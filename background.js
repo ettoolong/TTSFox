@@ -148,6 +148,8 @@ const openDialog = (selectionText) => {
       }).then(windowInfo => {
         dialog = windowInfo.id;
         dialogTab = windowInfo.tabs[0].id;
+        //Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1402110
+        browser.windows.update(dialog, {width: winWidth + 1});
       }, error => {
         console.log(error);
       });
