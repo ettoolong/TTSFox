@@ -9,7 +9,7 @@ let defaultPreference = {
   volume: 10,
   autoStartSpeech: false,
   cacheText: '',
-  version: 1
+  version: 2
 };
 let os = '';
 let menuId = null;
@@ -26,7 +26,6 @@ let prefsMapping = {
 };
 
 browser.runtime.getPlatformInfo().then(info => {
-  console.log(info.os);
   os = info.os;
 });
 
@@ -64,6 +63,19 @@ const loadPreference = () => {
       browser.storage.onChanged.addListener(storageChangeHandler);
     }
     browser.storage.local.set({cacheText: ''});
+    if (results.version !== defaultPreference.version) {
+      let update = {};
+      let needUpdate = false;
+      for(let p in defaultPreference) {
+        if(preferences[p] === undefined) {
+          update[p] = defaultPreference[p];
+          needUpdate = true;
+        }
+      }
+      if(needUpdate) {
+        browser.storage.local.set(update).then(null, err => {});
+      }
+    }
     resetContextMenu();
     setBrowserActionIcon();
   });
