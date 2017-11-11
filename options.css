@@ -1,0 +1,23 @@
+.itemDiv {
+  display: block;
+  margin-top:4px;
+}
+
+.itemLabel {
+  display: inline-block;
+  width: 60px;
+}
+
+input.itemInput {
+  display: inline-block;
+  width: 150px;
+  font-size: 1em;
+  color: #444;
+  border-bottom-color: #ddd;
+}
+
+select.itemInput {
+  display: inline-block;
+  width: 250px;
+  margin-left:12px;
+}

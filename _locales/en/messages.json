@@ -8,11 +8,27 @@
 		"description": ""
 	},
 	"actionButtonTitle": {
-		"message": "Speech",
+		"message": "TTSFox",
 		"description": ""
 	},
-	"contextMenuItemTitle": {
-		"message": "Speech",
+	"contextMenuItemTitle_action1": {
+		"message": "Open speech window",
+		"description": ""
+	},
+	"contextMenuItemTitle_action2": {
+		"message": "Read out selected text",
+		"description": ""
+	},
+	"iconColor": {
+		"message": "Toolbar button icon color",
+		"description": ""
+	},
+	"iconColorBlack": {
+		"message": "Black",
+		"description": ""
+	},
+	"iconColorWhite": {
+		"message": "White",
 		"description": ""
 	},
 	"voice": {
@@ -84,7 +100,7 @@
 		"description": ""
 	},
 	"autoStartSpeech": {
-		"message": "Auto start speech when speech window opened",
+		"message": "Auto start speaking when using speech window",
 		"description": ""
 	},
 	"contextMenuEnabled": {
@@ -96,7 +112,7 @@
 		"description": ""
 	},
     "action2": {
-		"message": "Speech selected text",
+		"message": "Read out selected text",
 		"description": ""
 	},
     "contextMenuAction": {

@@ -1,6 +1,7 @@
 let defaultPreference = {
   contextMenuEnabled: true,
-  contextMenuAction: 0, //0:dialog, 1:speech
+  contextMenuAction: 0, //0:open dialog, 1:read out
+  iconColor: 0, //0:black, 1:white
   hotkeyAction: 0,
   voice: 'default',
   pitch: 2,
@@ -10,10 +11,12 @@ let defaultPreference = {
   cacheText: '',
   version: 1
 };
+let os = '';
 let menuId = null;
 let preferences = {};
 let dialog = null;
-let tab = null;
+let dialogTab = null; //tab in speech dialog
+let ttsTab = null;
 let initCount = 0;
 let allVoices = {};
 let prefsMapping = {
@@ -22,12 +25,21 @@ let prefsMapping = {
   volume: [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 };
 
+browser.runtime.getPlatformInfo().then(info => {
+  console.log(info.os);
+  os = info.os;
+});
+
 const storageChangeHandler = (changes, area) => {
   if(area === 'local') {
     let changedItems = Object.keys(changes);
     for (let item of changedItems) {
       preferences[item] = changes[item].newValue;
       switch (item) {
+        case 'iconColor':
+          setBrowserActionIcon();
+          break;
+        case 'contextMenuAction':
         case 'contextMenuEnabled':
           resetContextMenu();
           break;
@@ -53,6 +65,7 @@ const loadPreference = () => {
     }
     browser.storage.local.set({cacheText: ''});
     resetContextMenu();
+    setBrowserActionIcon();
   });
 };
 
@@ -63,9 +76,13 @@ window.addEventListener('DOMContentLoaded', event => {
 browser.browserAction.onClicked.addListener(tab => {
   getActiveTab( tab => {
     if(tab) {
-      getSelectionText(tab, selectionText => {
-        openDialog(selectionText);
-      });
+      if(tab.url.startsWith('about:')) {
+        openDialog('');
+      } else {
+        getSelectionText(tab, selectionText => {
+          openDialog(selectionText);
+        });
+      }
     }
   });
 });
@@ -97,12 +114,20 @@ const getSelectionText = (tab, callback) => {
 };
 
 const speech = (selectionText) => {
-  let u = new window.SpeechSynthesisUtterance(selectionText);
-  u.pitch  = prefsMapping.pitch[preferences.pitch];
-  u.rate   = prefsMapping.rate[preferences.rate];
-  u.volume = prefsMapping.volume[preferences.volume];
-  u.voice  = allVoices[preferences.voice];
-  window.speechSynthesis.speak(u);
+  getActiveTab( tab => {
+    if(tab) {
+      ttsTab = tab;
+      let u = new window.SpeechSynthesisUtterance(selectionText);
+      u.pitch  = prefsMapping.pitch[preferences.pitch];
+      u.rate   = prefsMapping.rate[preferences.rate];
+      u.volume = prefsMapping.volume[preferences.volume];
+      u.voice  = allVoices[preferences.voice];
+      u.onend = function(event) {
+        ttsTab = null;
+      }
+      window.speechSynthesis.speak(u);
+    }
+  });
 };
 
 const openDialog = (selectionText) => {
@@ -111,16 +136,18 @@ const openDialog = (selectionText) => {
     browser.windows.update(dialog, {focused: true});
   }
   else {
-    browser.storage.local.set({cacheText: selectionText}).then(()=>{
+    let winWidth = os === 'mac' ? 750: 770;
+    let winHeight = os === 'mac' ? 250: 270;
+    browser.storage.local.set({cacheText: selectionText}).then(() => {
       browser.windows.create({
         url: 'ttsPanel.html',
         type: 'panel',
         incognito: true,
-        width: 750,
-        height: 250,
+        width: winWidth,
+        height: winHeight,
       }).then(windowInfo => {
         dialog = windowInfo.id;
-        tab = windowInfo.tabs[0].id;
+        dialogTab = windowInfo.tabs[0].id;
       }, error => {
         console.log(error);
       });
@@ -133,18 +160,21 @@ const openDialog = (selectionText) => {
 browser.windows.onRemoved.addListener(windowID => {
   if(dialog === windowID) {
     dialog = null;
-    tab = null;
+    dialogTab = null;
   }
 });
 
 const createContextMenu = () => {
+  let title = preferences.contextMenuAction === 0 ?
+    browser.i18n.getMessage('contextMenuItemTitle_action1') :
+    browser.i18n.getMessage('contextMenuItemTitle_action2');
   if (menuId !== null) {
+    browser.contextMenus.update(menuId,{title: title});
     return;
   }
-
   menuId = browser.contextMenus.create({
     type: 'normal',
-    title: browser.i18n.getMessage('contextMenuItemTitle'),
+    title: title,
     contexts: ['selection'],
     onclick: (data) => {
       //
@@ -174,13 +204,20 @@ const createContextMenu = () => {
 }
 
 const resetContextMenu = () => {
-  let createNew = false;
   if (preferences.contextMenuEnabled) {
     createContextMenu();
   } else {
     browser.contextMenus.removeAll(() => {
       menuId = null;
     });
+  }
+};
+
+const setBrowserActionIcon = () => {
+  if(preferences.iconColor === 1) {
+    browser.browserAction.setIcon({path: 'icon/icon_w.svg'});
+  } else {
+    browser.browserAction.setIcon({path: 'icon/icon.svg'});
   }
 };
 
@@ -221,3 +258,19 @@ const tryInit = () => {
 if(window.speechSynthesis){
   setTimeout(tryInit, 1000);
 }
+
+browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
+  if(ttsTab && ttsTab.id == tabId) {
+    window.speechSynthesis.cancel();
+    ttsTab = null;
+  }
+});
+
+browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
+  if (changeInfo.url) {
+    if(ttsTab && ttsTab.id == tabId) {
+      window.speechSynthesis.cancel();
+      ttsTab = null;
+    }
+  }
+});

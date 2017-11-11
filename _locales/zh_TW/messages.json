@@ -8,11 +8,27 @@
 		"description": ""
 	},
 	"actionButtonTitle": {
+		"message": "TTSFox",
+		"description": ""
+	},
+	"contextMenuItemTitle_action1": {
+		"message": "開啟朗讀視窗",
+		"description": ""
+	},
+	"contextMenuItemTitle_action2": {
 		"message": "朗讀",
 		"description": ""
 	},
-	"contextMenuItemTitle": {
-		"message": "朗讀",
+	"iconColor": {
+		"message": "工具列圖示顏色",
+		"description": ""
+	},
+	"iconColorBlack": {
+		"message": "黑",
+		"description": ""
+	},
+	"iconColorWhite": {
+		"message": "白",
 		"description": ""
 	},
 	"voice": {

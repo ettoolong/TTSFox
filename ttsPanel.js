@@ -94,8 +94,14 @@ const storageChangeHandler = (changes, area) => {
     let changedItems = Object.keys(changes);
     for (let item of changedItems) {
       switch (item) {
+        case 'autoStartSpeech':
+          currentPrefs[item] = changes[item].newValue;
+          break;
         case 'cacheText':
           document.getElementById('speechText').value = changes[item].newValue;
+          if(!optionPage && currentPrefs.autoStartSpeech) {
+            speech();
+          }
           break;
       }
     }
