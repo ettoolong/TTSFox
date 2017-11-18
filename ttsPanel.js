@@ -289,7 +289,7 @@ const init = preferences => {
     setValueToElem(p, preferences[p]);
     handleVelueChange(p);
   }
-  document.title = browser.i18n.getMessage('speech');
+  document.title = 'TTSFox';//browser.i18n.getMessage('speech');
   let l10nTags = Array.from(document.querySelectorAll('[data-l10n-id]'));
   l10nTags.forEach(tag => {
     tag.textContent = browser.i18n.getMessage(tag.getAttribute('data-l10n-id'));
@@ -313,3 +313,12 @@ window.addEventListener('load', event => {
     }
   });
 }, true);
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  // Fix for Fx57 bug where bundled page loaded using
+  // browser.windows.create won't show contents unless resized.
+  // See https://bugzilla.mozilla.org/show_bug.cgi?id=1402110
+  browser.windows.getCurrent((win) => {
+      browser.windows.update(win.id, {width:win.width+1})
+  })
+});
