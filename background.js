@@ -63,7 +63,7 @@ const loadPreference = () => {
       browser.storage.onChanged.addListener(storageChangeHandler);
     }
     browser.storage.local.set({cacheText: ''});
-    if (results.version !== defaultPreference.version) {
+    if (preferences.version !== defaultPreference.version) {
       let update = {};
       let needUpdate = false;
       for(let p in defaultPreference) {
@@ -125,21 +125,35 @@ const getSelectionText = (tab, callback) => {
   });
 };
 
-const speech = (selectionText) => {
-  getActiveTab( tab => {
-    if(tab) {
-      ttsTab = tab;
-      let u = new window.SpeechSynthesisUtterance(selectionText);
-      u.pitch  = prefsMapping.pitch[preferences.pitch];
-      u.rate   = prefsMapping.rate[preferences.rate];
-      u.volume = prefsMapping.volume[preferences.volume];
-      u.voice  = allVoices[preferences.voice];
-      u.onend = function(event) {
-        ttsTab = null;
+const stopSpeech = (cancel) => {
+  if(cancel)
+    window.speechSynthesis.cancel();
+  ttsTab = null;
+  resetContextMenu();
+}
+
+const startSpeech = (selectionText) => {
+  let selectionTextTmp = selectionText ? selectionText.replace(/^\s+|\s+$/g,'') : '';
+  if(ttsTab) {
+    stopSpeech(true);
+  }
+  if(selectionTextTmp !== '') {
+    getActiveTab( tab => {
+      if(tab) {
+        ttsTab = tab;
+        let u = new window.SpeechSynthesisUtterance(selectionText);
+        u.pitch  = prefsMapping.pitch[preferences.pitch];
+        u.rate   = prefsMapping.rate[preferences.rate];
+        u.volume = prefsMapping.volume[preferences.volume];
+        u.voice  = allVoices[preferences.voice];
+        u.onend = function(event) {
+          stopSpeech(false);
+        }
+        window.speechSynthesis.speak(u);
+        resetContextMenu();
       }
-      window.speechSynthesis.speak(u);
-    }
-  });
+    });
+  }
 };
 
 const openDialog = (selectionText) => {
@@ -180,21 +194,22 @@ const createContextMenu = () => {
   let title = preferences.contextMenuAction === 0 ?
     browser.i18n.getMessage('contextMenuItemTitle_action1') :
     browser.i18n.getMessage('contextMenuItemTitle_action2');
+  let contexts = ( ttsTab && preferences.contextMenuAction === 1 ) ? ['all'] : ['selection'];
   if (menuId !== null) {
-    browser.contextMenus.update(menuId,{title: title});
+    browser.contextMenus.update(menuId,{title: title, contexts: contexts});
     return;
   }
   menuId = browser.contextMenus.create({
     type: 'normal',
     title: title,
-    contexts: ['selection'],
+    contexts: contexts,
     onclick: (data) => {
       //
       if(preferences.contextMenuAction === 0) {
         openDialog(data.selectionText);
       }
       else if(preferences.contextMenuAction === 1) {
-        speech(data.selectionText);
+        startSpeech('selectionText' in data ? data.selectionText : '');
       }
       //don't use data.selectionText, because it's max length is 150 character.
       // getActiveTab( tab => {
@@ -205,7 +220,7 @@ const createContextMenu = () => {
       //           openDialog(selectionText);
       //         }
       //         else if(preferences.contextMenuAction === 1) {
-      //           speech(selectionText);
+      //           startSpeech(selectionText);
       //         }
       //       }
       //     });
@@ -238,14 +253,12 @@ browser.commands.onCommand.addListener(command => {
     getActiveTab( tab => {
       if(tab) {
         getSelectionText(tab, selectionText => {
-        if(selectionText) {
-          if(preferences.hotkeyAction === 0) {
+          if(selectionText && preferences.hotkeyAction === 0) {
             openDialog(selectionText);
           }
           else if(preferences.hotkeyAction === 1) {
-            speech(selectionText);
+            startSpeech(selectionText);
           }
-        }
         });
       }
     });
@@ -273,16 +286,14 @@ if(window.speechSynthesis){
 
 browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
   if(ttsTab && ttsTab.id == tabId) {
-    window.speechSynthesis.cancel();
-    ttsTab = null;
+    stopSpeech(true);
   }
 });
 
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
   if (changeInfo.url) {
     if(ttsTab && ttsTab.id == tabId) {
-      window.speechSynthesis.cancel();
-      ttsTab = null;
+      stopSpeech(true);
     }
   }
 });

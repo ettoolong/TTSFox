@@ -239,7 +239,7 @@ const handleVelueChange = id => {
       for(let radio of radios) {
         radio.addEventListener('input', event => {
           if(radio.checked)
-            saveToPreference(id, parseInt(radio.getAttribute("value")));
+            saveToPreference(id, parseInt(radio.getAttribute('value')));
         });
       }
     }
