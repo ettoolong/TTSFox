@@ -47,6 +47,14 @@
 		"message": "Volume",
 		"description": ""
 	},
+	"startFromCursorPos": {
+		"message": "Start from cursor position",
+		"description": ""
+	},
+	"readSelectedFragment": {
+		"message": "Only read out selected text fragment",
+		"description": ""
+	},
 	"speech": {
 		"message": "Speech",
 		"description": ""

@@ -28,9 +28,21 @@
             <span class="itemLabel" data-l10n-id="volume">Volume</span>
             <input id="volume" class="itemInput" type="range" min="0" max="10" value="10" step="1"/><span id="volume_value"></span>
           </div>
+          <div class="itemDiv">
+            <input type="checkbox" id="startFromCursorPos">
+            <label for="startFromCursorPos" id="label_startFromCursorPos" data-l10n-id="startFromCursorPos">Start from cursor position</label>
+          </div>
+          <div class="itemDiv">
+            <input disabled="true" type="checkbox" id="readSelectedFragment" checked>
+            <label disabled="true" for="readSelectedFragment" id="label_readSelectedFragment" data-l10n-id="readSelectedFragment">Only read out selected text fragment</label>
+          </div>
         </div>
         <div style="display:inline-block;">
-          <textarea id='speechText'></textarea>
+          <div id="textContainer">
+            <div id="currentText"></div>
+            <textarea id="speechText"></textarea>
+            <div id="textareaCover"></div>
+          </div>
         </div>
       </div>
       <div style="margin:10px 10px 5px 0px;text-align:right">

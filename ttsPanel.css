@@ -3,8 +3,67 @@ body {
   background: #eee;
 }
 
-textarea {
+#textContainer {
   width:380px;
   height:160px;
+  /* background-color: greenyellow; */
+  position: absolute;
+  top: 14px;
+  border-width: 1px;
+  border-color: #000;
+  border-style: solid;
+  box-sizing: border-box;
+}
+
+textarea {
   resize: none;
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-width: 0px;
+  padding: 0px 2px;
+  margin: 0px;
+  box-sizing: border-box;
+  font-family: Helvetica;
+  font-size: 1em;
+  line-height: 1.4em;
+}
+
+#currentText {
+  position: absolute;
+  border-width: 0px;
+  padding: 0px 2px;
+  margin: 0px;
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  font-family: Helvetica;
+  font-size: 1em;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-y: auto;
+  line-height: 1.4em;
+}
+
+#textareaCover {
+  position: absolute;
+  border-width: 0px;
+  padding: 0px 2px;
+  margin: 0px;
+  opacity: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+#currentText span{
+  background-color: #b4d5ff;
+}
+
+label[disabled=true] {
+  color: #aaa;
 }

@@ -1,6 +1,29 @@
 let currentPrefs = {};
 let initCount = 0;
 let optionPage = false;
+let highlightRule = {
+  'en-US': {highlight: true, singleChar: true},
+  'ru-RU': {highlight: true, singleChar: false},
+  'default': {highlight: false}
+};
+
+//
+//document.getElementById
+let elem_voice;
+let elem_pitch;
+let elem_rate;
+let elem_btnResume;
+let elem_btnPause;
+let elem_btnSpeech;
+let elem_btnCancel;
+let elem_speechText;
+let elem_currentText;
+let elem_volume;
+let elem_readSelectedFragment;
+let elem_label_readSelectedFragment;
+let elem_startFromCursorPos;
+let elem_label_startFromCursorPos;
+let elem_textareaCover;
 
 let ttsfox = {
   initCount: 0,
@@ -37,51 +60,76 @@ let ttsfox = {
       //u.lang   = this.voices[setting.voice].lang;
 
       u.onpause = function(event) {
-        document.getElementById('btnResume').style.display = 'inline-block';
-        document.getElementById('btnPause').style.display = 'none';
+        elem_btnResume.style.display = 'inline-block';
+        elem_btnPause.style.display = 'none';
       }
 
       u.onresume = function(event) {
-        document.getElementById('btnPause').style.display = 'inline-block';
-        document.getElementById('btnResume').style.display = 'none';
-        let speechText = document.getElementById('speechText');
-        speechText.focus();
+        elem_btnPause.style.display = 'inline-block';
+        elem_btnResume.style.display = 'none';
+        // let speechText = document.getElementById('speechText');
+        // speechText.focus();
       }
 
       u.onstart = function(event) {
-        document.getElementById('btnSpeech').style.display = 'none';
-        document.getElementById('btnCancel').style.display = 'inline-block';
-        document.getElementById('btnPause').removeAttribute('disabled');
-        document.getElementById('btnResume').style.display = 'none';
-        let speechText = document.getElementById('speechText');
-        speechText.readOnly = true;
-        speechText.focus();
+        elem_btnSpeech.style.display = 'none';
+        elem_btnCancel.style.display = 'inline-block';
+        elem_btnPause.removeAttribute('disabled');
+        elem_btnResume.style.display = 'none';
+        elem_speechText.readOnly = true;
+        elem_speechText.style.display = 'none';
+        elem_textareaCover.style.display = 'block';
+        syncDivAndTextarea({text: true});
+        // speechText.focus();
       }
 
       u.onend = function(event) {
-        document.getElementById('btnCancel').style.display = 'none';
-        document.getElementById('btnSpeech').style.display = 'inline-block';
-        document.getElementById('btnPause').setAttribute('disabled', true);
-        document.getElementById('btnPause').style.display = 'inline-block';
-        document.getElementById('btnResume').style.display = 'none';
-        let speechText = document.getElementById('speechText');
-        speechText.setSelectionRange(0, 0);
-        speechText.readOnly = false;
+        elem_btnCancel.style.display = 'none';
+        elem_btnSpeech.style.display = 'inline-block';
+        elem_btnPause.setAttribute('disabled', true);
+        elem_btnPause.style.display = 'inline-block';
+        elem_btnResume.style.display = 'none';
+        setSelectionRange(0, 0);
+        //speechText.setSelectionRange(0, 0);
+        elem_speechText.readOnly = false;
+        elem_speechText.style.display = 'block';
+        elem_textareaCover.style.display = 'none';
+        syncDivAndTextarea({text: true, scrollPosition: true, selectionRang:true});
+        elem_speechText.focus();
       }
       u.onboundary = function(event) {
         if(setting.highlight) {
-          let speechText = document.getElementById('speechText');
-          let text = speechText.value;
-          let tmpText = text.substring(event.charIndex);
-          let nextSpace = tmpText.search('[ ,.;]');
-          //let nextSpace = text.indexOf(' ', event.charIndex);
-          if(nextSpace === -1) {
-            nextSpace = text.length;
+          if(setting.highlightRule.highlight) {
+            let start = event.charIndex + setting.startPosition;
+            let text = elem_speechText.value;
+            let tmpText = text.substring(start);
+            let nextSpace = tmpText.search('[ ,.;]');
+            //console.log(nextSpace);
+            if(nextSpace == 1 && setting.highlightRule.singleChar === false ) {
+              let tmpText2 = text.substring(start+2);
+              let nextSpace2 = tmpText2.search('[ ,.;]');
+              if(nextSpace2 === -1) {
+                nextSpace = -1;
+              }
+              else {
+                nextSpace += nextSpace2 + 1;
+              }
+            }
+            //let nextSpace = text.indexOf(' ', event.charIndex);
+            if(nextSpace === -1) {
+              nextSpace = text.length;
+            }
+            else {
+              nextSpace = start + nextSpace;
+            }
+            setSelectionRange(start, nextSpace);
+            //speechText.setSelectionRange(event.charIndex, nextSpace);
           }
           else {
-            nextSpace = event.charIndex + nextSpace;
+            let start = event.charIndex + setting.startPosition + 4;
+            if(start > text.length) start = text.length;
+            setSelectionRange(start, start);
           }
-          speechText.setSelectionRange(event.charIndex, nextSpace);
         }
       }
       window.speechSynthesis.speak(u);
@@ -98,7 +146,10 @@ const storageChangeHandler = (changes, area) => {
           currentPrefs[item] = changes[item].newValue;
           break;
         case 'cacheText':
-          document.getElementById('speechText').value = changes[item].newValue;
+          elem_speechText.value = changes[item].newValue;
+          elem_speechText.setSelectionRange(0, 0);
+          setSelectionRange(0, 0);
+          checkSelection();
           if(!optionPage && currentPrefs.autoStartSpeech) {
             speech();
           }
@@ -108,18 +159,71 @@ const storageChangeHandler = (changes, area) => {
   }
 };
 
+const syncDivAndTextarea = (options) => {
+  if(options.text && !options.selectionRang) {
+    elem_currentText.textContent = elem_speechText.value;
+  }
+  if(options.selectionRang) {
+    let start = elem_speechText.selectionStart;
+    let end = elem_speechText.selectionEnd;
+    setSelectionRange(start, end);
+  }
+  if(options.scrollPosition) {
+    elem_currentText.scrollTop = elem_speechText.scrollTop;
+  }
+};
+
+const setSelectionRange = (rangeStart, rangeEnd) => {
+  //console.log('rangeStart = ' + rangeStart + ', rangeEnd = ' + rangeEnd);
+
+  let start = rangeStart;
+  let end = rangeEnd;
+  let text = elem_speechText.value;
+  elem_currentText.textContent = '';
+  elem_currentText.appendChild(document.createTextNode(text.substring(0, start)));
+  let s = document.createElement('SPAN');
+  s.textContent = text.substring(start, end);
+  elem_currentText.appendChild(s)
+  elem_currentText.appendChild(document.createTextNode(text.substring(end, text.lengrh)));
+  s.scrollIntoView({behavior: 'instant', block: 'nearest', inline: 'nearest'});
+};
+
 const speech = () => {
+  let startFromCursorPos = elem_startFromCursorPos.checked && !elem_startFromCursorPos.getAttribute('disabled');
+  let readSelectedFragment = elem_readSelectedFragment.checked && !elem_readSelectedFragment.getAttribute('disabled');
   if(ttsfox.voices && ttsfox.voices.length) {
     let setting =  {
-      voice: document.getElementById('voice').selectedIndex,
-      pitch: ttsfox.prefsMapping.pitch[document.getElementById('pitch').value],
-      rate: ttsfox.prefsMapping.rate[document.getElementById('rate').value],
-      volume: ttsfox.prefsMapping.volume[document.getElementById('volume').value],
+      voice: elem_voice.selectedIndex,
+      pitch: ttsfox.prefsMapping.pitch[elem_pitch.value],
+      rate: ttsfox.prefsMapping.rate[elem_rate.value],
+      volume: ttsfox.prefsMapping.volume[elem_volume.value],
     };
-    if(ttsfox.voices[setting.voice].lang == 'en-US') {
+    if(highlightRule[ttsfox.voices[setting.voice].lang]) {
       setting.highlight = true;
+      setting.highlightRule = highlightRule[ttsfox.voices[setting.voice].lang];
     }
-    ttsfox.speech(speechText.value, setting);
+    else {
+      setting.highlight = true;
+      setting.highlightRule = highlightRule.default;
+    }
+    if(startFromCursorPos) {
+      let start = elem_speechText.selectionStart;
+      let fullText = elem_speechText.value
+      let text = fullText.substring(start, fullText.length);
+      setting.startPosition = start;
+      ttsfox.speech(text, setting);
+    }
+    else if(readSelectedFragment) {
+      let start = elem_speechText.selectionStart;
+      let fullText = elem_speechText.value
+      let text = fullText.substring(start, elem_speechText.selectionEnd);
+      setting.startPosition = start;
+      ttsfox.speech(text, setting);
+    }
+    else {
+      setting.startPosition = 0;
+      ttsfox.speech(elem_speechText.value, setting);
+    }
   } else {
     //TODO: show alert
   }
@@ -141,7 +245,6 @@ const tryInit = () => {
   let voices = window.speechSynthesis.getVoices() || [];
   if(voices.length) {
     ttsfox.voices = voices;
-    let input_voice = document.getElementById('voice');
     for(let i = 0; i < voices.length ; i++) {
       let option = document.createElement('option');
       option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
@@ -151,12 +254,12 @@ const tryInit = () => {
       //}
       option.setAttribute('data-lang', voices[i].lang);
       option.setAttribute('data-name', voices[i].name);
-      input_voice.appendChild(option);
+      elem_voice.appendChild(option);
       if(option.textContent === currentPrefs.voice) {
         option.selected = true;
       }
     }
-    if(input_voice.selectedIndex === -1) {
+    if(elem_voice.selectedIndex === -1) {
       for(let i = 0; i < voices.length ; i++) {
         if(voices[i].lang == 'en-US') {
           option.selected = true;
@@ -196,26 +299,84 @@ const setLabelText = (name, value) => {
   elem.appendChild(textNode);
 };
 
+const checkSelection = () => {
+  if(elem_speechText.selectionStart == elem_speechText.selectionEnd) {
+    elem_label_readSelectedFragment.setAttribute('disabled' , true);
+    elem_readSelectedFragment.setAttribute('disabled' , true);
+    elem_label_startFromCursorPos.removeAttribute('disabled');
+    elem_startFromCursorPos.removeAttribute('disabled');
+  }
+  else {
+    elem_label_readSelectedFragment.removeAttribute('disabled');
+    elem_readSelectedFragment.removeAttribute('disabled');
+    elem_label_startFromCursorPos.setAttribute('disabled' , true);
+    elem_startFromCursorPos.setAttribute('disabled' , true);
+  }
+};
+
 const startup = () => {
+  elem_voice = document.getElementById('voice');
+  elem_pitch = document.getElementById('pitch');
+  elem_rate = document.getElementById('rate');
+  elem_volume = document.getElementById('volume');
+
   if(!optionPage) {
+    elem_btnResume = document.getElementById('btnResume');
+    elem_btnPause = document.getElementById('btnPause');
+    elem_btnSpeech = document.getElementById('btnSpeech');
+    elem_btnCancel = document.getElementById('btnCancel');
+    elem_speechText = document.getElementById('speechText');
+    elem_currentText = document.getElementById('currentText');
+    elem_textareaCover = document.getElementById('textareaCover');
+    elem_readSelectedFragment = document.getElementById('readSelectedFragment');
+    elem_label_readSelectedFragment = document.getElementById('label_readSelectedFragment');
+    elem_startFromCursorPos = document.getElementById('startFromCursorPos');
+    elem_label_startFromCursorPos = document.getElementById('label_startFromCursorPos');
+
     browser.storage.onChanged.addListener(storageChangeHandler);
-    document.getElementById('btnSpeech').addEventListener('click', speech, false);
-    document.getElementById('btnCancel').addEventListener('click', cancel, false);
-    document.getElementById('btnPause').addEventListener('click', pause, false);
-    document.getElementById('btnResume').addEventListener('click', resume, false);
-    document.getElementById('speechText').value = currentPrefs.cacheText;
+    elem_btnSpeech.addEventListener('click', speech, false);
+    elem_btnCancel.addEventListener('click', cancel, false);
+    elem_btnPause.addEventListener('click', pause, false);
+    elem_btnResume.addEventListener('click', resume, false);
+
+    elem_speechText.value = currentPrefs.cacheText;
+    elem_speechText.onblur = function () {
+      let start = elem_speechText.selectionStart;
+      let end = elem_speechText.selectionEnd;
+      elem_speechText.style.opacity = 0;
+      let text = elem_speechText.value;
+      elem_currentText.textContent = '';
+      elem_currentText.appendChild(document.createTextNode(text.substring(0, start)));
+      let s = document.createElement('SPAN');
+      s.textContent = text.substring(start, end);
+      elem_currentText.appendChild(s)
+      elem_currentText.appendChild(document.createTextNode(text.substring(end, text.lengrh)));
+      elem_currentText.style.opacity = 1;
+      elem_currentText.scrollTop = elem_speechText.scrollTop;
+    }
+    elem_speechText.onfocus = function () {
+      elem_currentText.style.opacity = 0;
+      elem_speechText.style.opacity = 1;
+    }
+    elem_speechText.addEventListener('mouseup', event => {
+      setTimeout(checkSelection, 0);
+    }, true);
+
+    elem_speechText.addEventListener('keypress', event => {
+      setTimeout(checkSelection, 0);
+    });
   }
   else {
     //
   }
 
-  document.getElementById('pitch').addEventListener('input', event => {
+  elem_pitch.addEventListener('input', event => {
     setLabelText('pitch', event.target.value);
   }, false);
-  document.getElementById('rate').addEventListener('input', event => {
+  elem_rate.addEventListener('input', event => {
     setLabelText('rate', event.target.value);
   }, false);
-  document.getElementById('volume').addEventListener('input', event => {
+  elem_volume.addEventListener('input', event => {
     setLabelText('volume', event.target.value)
   }, false);
 

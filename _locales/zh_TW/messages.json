@@ -47,6 +47,14 @@
 		"message": "音量",
 		"description": ""
 	},
+	"startFromCursorPos": {
+		"message": "從游標位置處開始讀",
+		"description": ""
+	},
+	"readSelectedFragment": {
+		"message": "只朗讀圈選的部份",
+		"description": ""
+	},
 	"speech": {
 		"message": "朗讀",
 		"description": ""
