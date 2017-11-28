@@ -113,7 +113,7 @@ const getActiveTab = callback => {
 const getSelectionText = (tab, callback) => {
   browser.tabs.sendMessage(
     tab.id,
-    {act: 'getSelectionText'},
+    {act: 'getSelectionText'}
   ).then(response => {
     if(response.text) {
       callback(response.text);

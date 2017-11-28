@@ -103,11 +103,11 @@ let ttsfox = {
             let start = event.charIndex + setting.startPosition;
             let text = elem_speechText.value;
             let tmpText = text.substring(start);
-            let nextSpace = tmpText.search('[ ,.;]');
+            let nextSpace = tmpText.search('[ ,.;\n]');
             //console.log(nextSpace);
             if(nextSpace == 1 && setting.highlightRule.singleChar === false ) {
               let tmpText2 = text.substring(start+2);
-              let nextSpace2 = tmpText2.search('[ ,.;]');
+              let nextSpace2 = tmpText2.search('[ ,.;\n]');
               if(nextSpace2 === -1) {
                 nextSpace = -1;
               }
@@ -185,7 +185,12 @@ const setSelectionRange = (rangeStart, rangeEnd) => {
   s.textContent = text.substring(start, end);
   elem_currentText.appendChild(s)
   elem_currentText.appendChild(document.createTextNode(text.substring(end, text.lengrh)));
-  s.scrollIntoView({behavior: 'instant', block: 'nearest', inline: 'nearest'});
+  try {
+    s.scrollIntoView({behavior: 'instant', block: 'nearest', inline: 'nearest'});
+  }
+  catch(ex){
+    s.scrollIntoView(false);
+  }
 };
 
 const speech = () => {
