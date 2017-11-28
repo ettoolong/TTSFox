@@ -1,0 +1,134 @@
+{
+	"extName": {
+		"message": "TTSFox",
+		"description": ""
+	},
+	"extDescription": {
+		"message": "Читає текст синтезованим голосом. Використовує вбудовані в ОС TTS-рушії, тому працюватиме навіть без інтернету.",
+		"description": ""
+	},
+	"actionButtonTitle": {
+		"message": "TTSFox",
+		"description": ""
+	},
+	"contextMenuItemTitle_action1": {
+		"message": "Відкрити Читальне Вікно",
+		"description": ""
+	},
+	"contextMenuItemTitle_action2": {
+		"message": "Прочитати виділений текст",
+		"description": ""
+	},
+	"iconColor": {
+		"message": "Колір кнопки на панелі інструментів",
+		"description": ""
+	},
+	"iconColorBlack": {
+		"message": "Чорний",
+		"description": ""
+	},
+	"iconColorWhite": {
+		"message": "Білий",
+		"description": ""
+	},
+	"voice": {
+		"message": "Голос",
+		"description": ""
+	},
+	"pitch": {
+		"message": "Висота",
+		"description": ""
+	},
+	"rate": {
+		"message": "Швидкість",
+		"description": ""
+	},
+	"volume": {
+		"message": "Гучність",
+		"description": ""
+	},
+	"startFromCursorPos": {
+		"message": "Почати читання з позиції курсора",
+		"description": ""
+	},
+	"readSelectedFragment": {
+		"message": "Прочитати виділений фрагмент тексту",
+		"description": ""
+	},
+	"speech": {
+		"message": "Читати",
+		"description": ""
+	},
+	"cancel": {
+		"message": "Відміна",
+		"description": ""
+	},
+	"pause": {
+		"message": "Пауза",
+		"description": ""
+	},
+	"resume": {
+		"message": "Продовжити",
+		"description": ""
+	},
+	"rateS0": {
+		"message": "1/10 X",
+		"description": ""
+	},
+	"rateS1": {
+		"message": "1/8 X",
+		"description": ""
+	},
+	"rateS2": {
+		"message": "1/4 X",
+		"description": ""
+	},
+	"rateS3": {
+		"message": "1/2 X",
+		"description": ""
+	},
+	"rateS4": {
+		"message": "1 X",
+		"description": ""
+	},
+	"rateS5": {
+		"message": "2 X",
+		"description": ""
+	},
+	"rateS6": {
+		"message": "4 X",
+		"description": ""
+	},
+	"rateS7": {
+		"message": "5 X",
+		"description": ""
+	},
+	"rateS8": {
+		"message": "10 X",
+		"description": ""
+	},
+	"autoStartSpeech": {
+		"message": "Автоматично розпочати читання по відкриттю Читального Вікна",
+		"description": ""
+	},
+	"contextMenuEnabled": {
+		"message": "Активувати контекстне меню",
+		"description": ""
+	},
+    "action1": {
+		"message": "Відкрити Читальне Вікно",
+		"description": ""
+	},
+    "action2": {
+		"message": "Читати виділений текст",
+		"description": ""
+	},
+    "contextMenuAction": {
+		"message": "Дія для контекстного меню",
+		"description": ""
+	},
+    "hotkeyAction": {
+		"message": "Дія для гарячої клавіші",
+		"description": ""
+	}
+}
