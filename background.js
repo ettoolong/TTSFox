@@ -12,6 +12,7 @@ let defaultPreference = {
   version: 2
 };
 let os = '';
+let fxVersion = 52;
 let menuId = null;
 let preferences = {};
 let dialog = null;
@@ -25,8 +26,11 @@ let prefsMapping = {
   volume: [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 };
 
-browser.runtime.getPlatformInfo().then(info => {
-  os = info.os;
+browser.runtime.getPlatformInfo().then(platformInfo => {
+  os = platformInfo.os;
+  browser.runtime.getBrowserInfo().then(browserInfo => {
+    fxVersion = parseInt(browserInfo.version);
+  });
 });
 
 const storageChangeHandler = (changes, area) => {
@@ -190,6 +194,15 @@ browser.windows.onRemoved.addListener(windowID => {
   }
 });
 
+const exec = (selectionText) => {
+  if(preferences.contextMenuAction === 0) {
+    openDialog(selectionText);
+  }
+  else if(preferences.contextMenuAction === 1) {
+    startSpeech(selectionText);
+  }
+};
+
 const createContextMenu = () => {
   let title = preferences.contextMenuAction === 0 ?
     browser.i18n.getMessage('contextMenuItemTitle_action1') :
@@ -203,29 +216,24 @@ const createContextMenu = () => {
     type: 'normal',
     title: title,
     contexts: contexts,
-    onclick: (data) => {
-      //
-      if(preferences.contextMenuAction === 0) {
-        openDialog(data.selectionText);
+    onclick: (data, tab) => {
+      let text = 'selectionText' in data ? data.selectionText : '';
+      if( fxVersion >= 56 || text.length < 150) {
+        exec(text);
       }
-      else if(preferences.contextMenuAction === 1) {
-        startSpeech('selectionText' in data ? data.selectionText : '');
+      else {
+        // don't use data.selectionText, because it's max length is 150 character.
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=1338898
+        // getActiveTab( tab => {
+        //   if(tab) {
+        getSelectionText(tab, selectionText => {
+          if(selectionText) {
+            exec(selectionText);
+          }
+        });
+        //   }
+        // });
       }
-      //don't use data.selectionText, because it's max length is 150 character.
-      // getActiveTab( tab => {
-      //   if(tab) {
-      //     getSelectionText(tab, selectionText => {
-      //       if(selectionText) {
-      //         if(preferences.contextMenuAction === 0) {
-      //           openDialog(selectionText);
-      //         }
-      //         else if(preferences.contextMenuAction === 1) {
-      //           startSpeech(selectionText);
-      //         }
-      //       }
-      //     });
-      //   }
-      // });
     }
   });
 }

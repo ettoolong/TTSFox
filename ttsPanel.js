@@ -184,11 +184,9 @@ const setSelectionRange = (rangeStart, rangeEnd) => {
   let s = document.createElement('SPAN');
   s.textContent = text.substring(start, end);
   elem_currentText.appendChild(s)
-  elem_currentText.appendChild(document.createTextNode(text.substring(end, text.lengrh)));
-  try {
-    s.scrollIntoView({behavior: 'instant', block: 'nearest', inline: 'nearest'});
-  }
-  catch(ex){
+  elem_currentText.appendChild(document.createTextNode(text.substring(end)));
+  //s.scrollIntoView({behavior: 'instant', block: 'nearest', inline: 'nearest'}); // Firefox 58+
+  if(rangeStart !== rangeEnd) {
     s.scrollIntoView(false);
   }
 };
