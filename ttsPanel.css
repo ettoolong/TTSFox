@@ -1,12 +1,16 @@
 body {
   user-select: none;
   background: #eee;
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 10px;
+  overflow: hidden;
 }
 
 #textContainer {
-  width:380px;
-  height:160px;
-  /* background-color: greenyellow; */
+  width: calc(100% - 360px);
+  height: calc(100% - 60px);
   position: absolute;
   top: 14px;
   border-width: 1px;
@@ -66,4 +70,15 @@ textarea {
 
 label[disabled=true] {
   color: #aaa;
+}
+
+.buttonBar {
+  text-align:right;
+  position: fixed;
+  width: 100%;
+  bottom: 10px;
+}
+
+.buttonGroup {
+  padding-right: 24px;
 }

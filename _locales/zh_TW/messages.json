@@ -115,19 +115,19 @@
 		"message": "啟用右鍵選單",
 		"description": ""
 	},
-    "action1": {
+  "action1": {
 		"message": "開啟朗讀視窗",
 		"description": ""
 	},
-    "action2": {
+  "action2": {
 		"message": "直接朗讀",
 		"description": ""
 	},
-    "contextMenuAction": {
+  "contextMenuAction": {
 		"message": "右鍵選單動作",
 		"description": ""
 	},
-    "hotkeyAction": {
+  "hotkeyAction": {
 		"message": "熱鍵動作",
 		"description": ""
 	}

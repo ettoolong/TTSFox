@@ -115,19 +115,19 @@
 		"message": "Enable context menu",
 		"description": ""
 	},
-    "action1": {
+  "action1": {
 		"message": "Open speech window",
 		"description": ""
 	},
-    "action2": {
+  "action2": {
 		"message": "Read out selected text",
 		"description": ""
 	},
-    "contextMenuAction": {
+  "contextMenuAction": {
 		"message": "Context menu action",
 		"description": ""
 	},
-    "hotkeyAction": {
+  "hotkeyAction": {
 		"message": "Hotkey action",
 		"description": ""
 	}

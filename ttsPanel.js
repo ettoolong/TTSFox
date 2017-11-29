@@ -137,6 +137,25 @@ let ttsfox = {
   }
 };
 
+const syncOption = (changes, area) => {
+  let syncOptionList = [
+    'contextMenuEnabled', 'contextMenuAction',
+    'iconColor', 'hotkeyAction', 'voice',
+    'pitch', 'rate', 'volume', 'autoStartSpeech'
+  ];
+  if(area === 'local') {
+    let changedItems = Object.keys(changes);
+    for (let item of changedItems) {
+      if(syncOptionList.includes(item)) {
+        if(currentPrefs[item] !== changes[item].newValue) {
+          currentPrefs[item] = changes[item].newValue;
+          setValueToElem(item, currentPrefs[item]);
+        }
+      }
+    }
+  }
+};
+
 const storageChangeHandler = (changes, area) => {
   if(area === 'local') {
     let changedItems = Object.keys(changes);
@@ -370,18 +389,20 @@ const startup = () => {
     });
   }
   else {
-    //
+    browser.storage.onChanged.addListener(syncOption);
+    browser.runtime.getPlatformInfo().then(platformInfo => {
+      if(platformInfo.os === 'win') {
+        elem_voice.addEventListener('mouseenter', event => {
+          setTimeout( () => {
+            elem_voice.parentNode.parentNode.style.height = 'calc(100% + 1px)';
+            setTimeout( () => {
+              elem_voice.parentNode.parentNode.style.height = '100%';
+            },500);
+          },0);
+        });
+      }
+    });
   }
-
-  elem_pitch.addEventListener('input', event => {
-    setLabelText('pitch', event.target.value);
-  }, false);
-  elem_rate.addEventListener('input', event => {
-    setLabelText('rate', event.target.value);
-  }, false);
-  elem_volume.addEventListener('input', event => {
-    setLabelText('volume', event.target.value)
-  }, false);
 
   if(window.speechSynthesis){
     setTimeout(tryInit, 100);
@@ -391,6 +412,9 @@ const startup = () => {
 const saveToPreference = (id, value) => {
   let update = {};
   update[id] = value;
+  if(optionPage) {
+    currentPrefs[id] = value;
+  }
   browser.storage.local.set(update).then(null, err => {});
 }
 
@@ -415,6 +439,7 @@ const handleVelueChange = id => {
     else if(elemType === 'range') {
       elem.addEventListener('input', event => {
         saveToPreference(id, parseInt(elem.value));
+        setLabelText(id, parseInt(elem.value));
       });
     }
     else if(elemType === 'option') {
@@ -431,6 +456,7 @@ const setValueToElem = (id, value) => {
     let elemType = elem.getAttribute('type');
     if(elemType === 'range') {
       elem.value = value;
+      setLabelText(id, parseInt(elem.value));
     }
     else if(elemType === 'checkbox') {
       elem.checked = value;
@@ -458,15 +484,16 @@ const init = preferences => {
   l10nTags.forEach(tag => {
     tag.textContent = browser.i18n.getMessage(tag.getAttribute('data-l10n-id'));
   });
-
-  setLabelText('pitch', currentPrefs.pitch);
-  setLabelText('rate', currentPrefs.rate);
-  setLabelText('volume', currentPrefs.volume);
 }
 
 window.addEventListener('load', event => {
-  if(document.getElementById('ttsfox-option'))
+  if(document.getElementById('ttsfox-option')) {
     optionPage = true;
+  }
+  if(!optionPage) {
+    document.body.style.minWidth = document.body.offsetWidth - 40 + 'px';
+    document.body.style.minHeight = document.body.offsetHeight + 'px';
+  }
   browser.storage.local.get().then(results => {
     if ((typeof results.length === 'number') && (results.length > 0)) {
       results = results[0];
