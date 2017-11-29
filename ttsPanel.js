@@ -128,7 +128,7 @@ let ttsfox = {
           else {
             let start = event.charIndex + setting.startPosition + 4;
             if(start > text.length) start = text.length;
-            setSelectionRange(start, start);
+            setSelectionRange(start, start, true);
           }
         }
       }
@@ -192,7 +192,7 @@ const syncDivAndTextarea = (options) => {
   }
 };
 
-const setSelectionRange = (rangeStart, rangeEnd) => {
+const setSelectionRange = (rangeStart, rangeEnd, forceScroll) => {
   //console.log('rangeStart = ' + rangeStart + ', rangeEnd = ' + rangeEnd);
 
   let start = rangeStart;
@@ -205,7 +205,7 @@ const setSelectionRange = (rangeStart, rangeEnd) => {
   elem_currentText.appendChild(s)
   elem_currentText.appendChild(document.createTextNode(text.substring(end)));
   //s.scrollIntoView({behavior: 'instant', block: 'nearest', inline: 'nearest'}); // Firefox 58+
-  if(rangeStart !== rangeEnd) {
+  if(rangeStart !== rangeEnd || forceScroll) {
     s.scrollIntoView(false);
   }
 };
