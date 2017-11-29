@@ -1,0 +1,134 @@
+{
+	"extName": {
+		"message": "TTSFox",
+		"description": ""
+	},
+	"extDescription": {
+		"message": "Преобразовывает текст в читаемую речь. Использует встроенные в ОС TTS-движки, поэтому работает даже без интернета.",
+		"description": ""
+	},
+	"actionButtonTitle": {
+		"message": "TTSFox",
+		"description": ""
+	},
+	"contextMenuItemTitle_action1": {
+		"message": "Открыть Читальное Окно",
+		"description": ""
+	},
+	"contextMenuItemTitle_action2": {
+		"message": "Прочесть выделенный текст",
+		"description": ""
+	},
+	"iconColor": {
+		"message": "Цвет кнопки на панели инструментов",
+		"description": ""
+	},
+	"iconColorBlack": {
+		"message": "Чёрный",
+		"description": ""
+	},
+	"iconColorWhite": {
+		"message": "Белый",
+		"description": ""
+	},
+	"voice": {
+		"message": "Голос",
+		"description": ""
+	},
+	"pitch": {
+		"message": "Высота",
+		"description": ""
+	},
+	"rate": {
+		"message": "Скорость",
+		"description": ""
+	},
+	"volume": {
+		"message": "Громкость",
+		"description": ""
+	},
+	"startFromCursorPos": {
+		"message": "Начать чтение с позиции курсора",
+		"description": ""
+	},
+	"readSelectedFragment": {
+		"message": "Прочесть выделенный фрагмент текста",
+		"description": ""
+	},
+	"speech": {
+		"message": "Читать",
+		"description": ""
+	},
+	"cancel": {
+		"message": "Отмена",
+		"description": ""
+	},
+	"pause": {
+		"message": "Пауза",
+		"description": ""
+	},
+	"resume": {
+		"message": "Продолжить",
+		"description": ""
+	},
+	"rateS0": {
+		"message": "1/10 X",
+		"description": ""
+	},
+	"rateS1": {
+		"message": "1/8 X",
+		"description": ""
+	},
+	"rateS2": {
+		"message": "1/4 X",
+		"description": ""
+	},
+	"rateS3": {
+		"message": "1/2 X",
+		"description": ""
+	},
+	"rateS4": {
+		"message": "1 X",
+		"description": ""
+	},
+	"rateS5": {
+		"message": "2 X",
+		"description": ""
+	},
+	"rateS6": {
+		"message": "4 X",
+		"description": ""
+	},
+	"rateS7": {
+		"message": "5 X",
+		"description": ""
+	},
+	"rateS8": {
+		"message": "10 X",
+		"description": ""
+	},
+	"autoStartSpeech": {
+		"message": "Автоматически начать чтение при открытии Читального Окна",
+		"description": ""
+	},
+	"contextMenuEnabled": {
+		"message": "Активировать контекстное меню",
+		"description": ""
+	},
+    "action1": {
+		"message": "Открыть Читальное Окно",
+		"description": ""
+	},
+    "action2": {
+		"message": "Читать выделенный текст",
+		"description": ""
+	},
+    "contextMenuAction": {
+		"message": "Действие для контекстного меню",
+		"description": ""
+	},
+    "hotkeyAction": {
+		"message": "Действие для горячей клавиши",
+		"description": ""
+	}
+}
