@@ -115,19 +115,19 @@
 		"message": "Активувати контекстне меню",
 		"description": ""
 	},
-    "action1": {
+	"action1": {
 		"message": "Відкрити Читальне Вікно",
 		"description": ""
 	},
-    "action2": {
+	"action2": {
 		"message": "Читати виділений текст",
 		"description": ""
 	},
-    "contextMenuAction": {
+	"contextMenuAction": {
 		"message": "Дія для контекстного меню",
 		"description": ""
 	},
-    "hotkeyAction": {
+	"hotkeyAction": {
 		"message": "Дія для гарячої клавіші",
 		"description": ""
 	}

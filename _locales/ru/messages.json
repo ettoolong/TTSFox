@@ -115,19 +115,19 @@
 		"message": "Активировать контекстное меню",
 		"description": ""
 	},
-    "action1": {
+	"action1": {
 		"message": "Открыть Читальное Окно",
 		"description": ""
 	},
-    "action2": {
+	"action2": {
 		"message": "Читать выделенный текст",
 		"description": ""
 	},
-    "contextMenuAction": {
+	"contextMenuAction": {
 		"message": "Действие для контекстного меню",
 		"description": ""
 	},
-    "hotkeyAction": {
+	"hotkeyAction": {
 		"message": "Действие для горячей клавиши",
 		"description": ""
 	}

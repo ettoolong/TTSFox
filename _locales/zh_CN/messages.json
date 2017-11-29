@@ -115,19 +115,19 @@
 		"message": "激活右键选单",
 		"description": ""
 	},
-  "action1": {
+	"action1": {
 		"message": "开启朗读视窗",
 		"description": ""
 	},
-  "action2": {
+	"action2": {
 		"message": "直接朗读",
 		"description": ""
 	},
-  "contextMenuAction": {
+	"contextMenuAction": {
 		"message": "右键选单动作",
 		"description": ""
 	},
-  "hotkeyAction": {
+	"hotkeyAction": {
 		"message": "快捷键动作",
 		"description": ""
 	}
