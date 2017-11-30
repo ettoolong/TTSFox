@@ -4,7 +4,7 @@
 		"description": ""
 	},
 	"extDescription": {
-		"message": "文字转语音套件。使用作业系统内建的文字转语音引擎，不连接网路时也可使用。",
+		"message": "文字转语音套件。使用操作系统内置的文字转语音（TTS）引擎，无需连接网络。",
 		"description": ""
 	},
 	"actionButtonTitle": {
@@ -12,7 +12,7 @@
 		"description": ""
 	},
 	"contextMenuItemTitle_action1": {
-		"message": "开启朗读视窗",
+		"message": "打开朗读窗口",
 		"description": ""
 	},
 	"contextMenuItemTitle_action2": {
@@ -20,7 +20,7 @@
 		"description": ""
 	},
 	"iconColor": {
-		"message": "工具列图示颜色",
+		"message": "工具栏图标颜色",
 		"description": ""
 	},
 	"iconColorBlack": {
@@ -52,7 +52,7 @@
 		"description": ""
 	},
 	"readSelectedFragment": {
-		"message": "只朗读选择的部份",
+		"message": "只朗读所选部份",
 		"description": ""
 	},
 	"speech": {
@@ -108,15 +108,15 @@
 		"description": ""
 	},
 	"autoStartSpeech": {
-		"message": "开启朗读视窗后自动开始朗读",
+		"message": "打开朗读窗口后自动开始朗读",
 		"description": ""
 	},
 	"contextMenuEnabled": {
-		"message": "激活右键选单",
+		"message": "激活右键菜单",
 		"description": ""
 	},
 	"action1": {
-		"message": "开启朗读视窗",
+		"message": "打开朗读窗口",
 		"description": ""
 	},
 	"action2": {
@@ -124,7 +124,7 @@
 		"description": ""
 	},
 	"contextMenuAction": {
-		"message": "右键选单动作",
+		"message": "右键菜单动作",
 		"description": ""
 	},
 	"hotkeyAction": {
