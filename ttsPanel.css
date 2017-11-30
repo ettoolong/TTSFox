@@ -36,6 +36,7 @@ textarea {
 
 #currentText {
   position: absolute;
+  opacity: 1;
   border-width: 0px;
   padding: 0px 2px;
   margin: 0px;

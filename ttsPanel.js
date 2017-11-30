@@ -67,8 +67,7 @@ let ttsfox = {
       u.onresume = function(event) {
         elem_btnPause.style.display = 'inline-block';
         elem_btnResume.style.display = 'none';
-        // let speechText = document.getElementById('speechText');
-        // speechText.focus();
+        // elem_speechText.focus();
       }
 
       u.onstart = function(event) {
@@ -80,7 +79,7 @@ let ttsfox = {
         elem_speechText.style.display = 'none';
         elem_textareaCover.style.display = 'block';
         syncDivAndTextarea({text: true});
-        // speechText.focus();
+        // elem_speechText.focus();
       }
 
       u.onend = function(event) {
@@ -211,6 +210,7 @@ const setSelectionRange = (rangeStart, rangeEnd, forceScroll) => {
 };
 
 const speech = () => {
+  chrome.runtime.sendMessage({action: 'stop'});
   let startFromCursorPos = elem_startFromCursorPos.checked && !elem_startFromCursorPos.getAttribute('disabled');
   let readSelectedFragment = elem_readSelectedFragment.checked && !elem_readSelectedFragment.getAttribute('disabled');
   if(ttsfox.voices && ttsfox.voices.length) {
@@ -365,7 +365,6 @@ const startup = () => {
     elem_speechText.onblur = function () {
       let start = elem_speechText.selectionStart;
       let end = elem_speechText.selectionEnd;
-      elem_speechText.style.opacity = 0;
       let text = elem_speechText.value;
       elem_currentText.textContent = '';
       elem_currentText.appendChild(document.createTextNode(text.substring(0, start)));
@@ -373,11 +372,12 @@ const startup = () => {
       s.textContent = text.substring(start, end);
       elem_currentText.appendChild(s)
       elem_currentText.appendChild(document.createTextNode(text.substring(end, text.lengrh)));
-      elem_currentText.style.opacity = 1;
+      elem_speechText.style.opacity = 0;
+      //elem_currentText.style.opacity = 1;
       elem_currentText.scrollTop = elem_speechText.scrollTop;
     }
     elem_speechText.onfocus = function () {
-      elem_currentText.style.opacity = 0;
+      //elem_currentText.style.opacity = 0;
       elem_speechText.style.opacity = 1;
     }
     elem_speechText.addEventListener('mouseup', event => {
@@ -386,6 +386,16 @@ const startup = () => {
 
     elem_speechText.addEventListener('keypress', event => {
       setTimeout(checkSelection, 0);
+    });
+
+    browser.runtime.onMessage.addListener( message => {
+      if (message.action === 'stop') {
+        try{
+          cancel();
+        }
+        catch(ex){}
+        return Promise.resolve({});
+      }
     });
   }
   else {

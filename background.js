@@ -129,6 +129,22 @@ const getSelectionText = (tab, callback) => {
   });
 };
 
+const stopOtherSpeech = (callback) => {
+  if(dialog && dialogTab) {
+    browser.tabs.sendMessage(
+      dialogTab,
+      {action: 'stop'}
+    ).then(response => {
+      callback();
+    }).catch( error => {
+      callback(); //just ignore
+    });
+  }
+  else {
+    callback();
+  }
+};
+
 const stopSpeech = (cancel) => {
   if(cancel)
     window.speechSynthesis.cancel();
@@ -137,33 +153,37 @@ const stopSpeech = (cancel) => {
 }
 
 const startSpeech = (selectionText) => {
-  let selectionTextTmp = selectionText ? selectionText.replace(/^\s+|\s+$/g,'') : '';
-  if(ttsTab) {
-    stopSpeech(true);
-  }
-  if(selectionTextTmp !== '') {
-    getActiveTab( tab => {
-      if(tab) {
-        ttsTab = tab;
-        let u = new window.SpeechSynthesisUtterance(selectionText);
-        u.pitch  = prefsMapping.pitch[preferences.pitch];
-        u.rate   = prefsMapping.rate[preferences.rate];
-        u.volume = prefsMapping.volume[preferences.volume];
-        u.voice  = allVoices[preferences.voice];
-        u.onend = function(event) {
-          stopSpeech(false);
+  stopOtherSpeech( () => {
+    let selectionTextTmp = selectionText ? selectionText.replace(/^\s+|\s+$/g,'') : '';
+    if(ttsTab) {
+      stopSpeech(true);
+    }
+    if(selectionTextTmp !== '') {
+      getActiveTab( tab => {
+        if(tab) {
+          ttsTab = tab;
+          let u = new window.SpeechSynthesisUtterance(selectionText);
+          u.pitch  = prefsMapping.pitch[preferences.pitch];
+          u.rate   = prefsMapping.rate[preferences.rate];
+          u.volume = prefsMapping.volume[preferences.volume];
+          u.voice  = allVoices[preferences.voice];
+          u.onend = function(event) {
+            stopSpeech(false);
+          }
+          window.speechSynthesis.speak(u);
+          resetContextMenu();
         }
-        window.speechSynthesis.speak(u);
-        resetContextMenu();
-      }
-    });
-  }
+      });
+    }
+  });
 };
 
 const openDialog = (selectionText) => {
   if(dialog) {
-    browser.storage.local.set({cacheText: selectionText});
-    browser.windows.update(dialog, {focused: true});
+    stopOtherSpeech( () => {
+      browser.storage.local.set({cacheText: selectionText});
+      browser.windows.update(dialog, {focused: true});
+    });
   }
   else {
     let winWidth = os === 'mac' ? 750: 770;
@@ -305,3 +325,13 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
     }
   }
 });
+
+const messageHandler = (message, sender, sendResponse) => {
+  if(message.action === 'stop') {
+    if(ttsTab) {
+      stopSpeech(true);
+    }
+  }
+};
+
+browser.runtime.onMessage.addListener(messageHandler);
