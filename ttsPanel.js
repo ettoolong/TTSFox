@@ -27,6 +27,8 @@ let elem_textareaCover;
 
 let ttsfox = {
   initCount: 0,
+  status: 'stop',
+  textInfo: {start: 0, end: 0},
   prefsMapping: {
     pitch: [0, 0.5, 1.0, 1.5, 2.0],
     rate: [0.1, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 10.0],
@@ -35,19 +37,52 @@ let ttsfox = {
   },
   voices: [],
   cancel: function() {
+    ttsfox.status = 'stop';
     if(window.speechSynthesis) {
       window.speechSynthesis.cancel();
     }
+    elem_btnCancel.setAttribute('disabled', true);
+    elem_btnSpeech.style.display = 'inline-block';
+    elem_btnPause.style.display = 'none';
+    elem_btnResume.style.display = 'none';
+    elem_currentText.classList.remove('pause');
+    setControllerStatus(true);
+    setSelectionRange(0, 0);
+    checkSelection();
+    //speechText.setSelectionRange(0, 0);
+    elem_speechText.readOnly = false;
+    elem_speechText.style.display = 'block';
+    elem_textareaCover.style.display = 'none';
+    syncDivAndTextarea({text: true, scrollPosition: true, selectionRang:true});
+    elem_speechText.focus();
   },
   pause: function() {
+    ttsfox.status = 'pause';
     if(window.speechSynthesis) {
-      window.speechSynthesis.pause();
+      //window.speechSynthesis.pause();
+      window.speechSynthesis.cancel();
     }
+    elem_btnResume.style.display = 'inline-block';
+    elem_btnPause.style.display = 'none';
+    elem_currentText.classList.add('pause');
+    elem_textareaCover.style.display = 'none';
+    setParagraphRange();
   },
   resume: function() {
-    if(window.speechSynthesis) {
-      window.speechSynthesis.resume();
-    }
+    ttsfox.status = 'play';
+    elem_btnPause.style.display = 'inline-block';
+    elem_btnResume.style.display = 'none';
+    elem_currentText.classList.remove('pause');
+    elem_textareaCover.style.display = 'block';
+    let start = ttsfox.lastPosition;
+    let fullText = elem_speechText.value;
+    let text = fullText.substring(start, ttsfox.textInfo.end);
+    let setting = getCurrentSetting();
+    setting.startPosition = start;
+    ttsfox.speech(text, setting);
+    // if(window.speechSynthesis) {
+    //   window.speechSynthesis.resume();
+    // }
   },
   speech: function(text, setting) {
     if(window.speechSynthesis) {
@@ -59,54 +94,56 @@ let ttsfox = {
       u.voice  = this.voices[setting.voice];
       //u.lang   = this.voices[setting.voice].lang;
 
-      u.onpause = function(event) {
-        elem_btnResume.style.display = 'inline-block';
-        elem_btnPause.style.display = 'none';
-      }
+      // u.onpause = function(event) {
+      //   elem_btnResume.style.display = 'inline-block';
+      //   elem_btnPause.style.display = 'none';
+      //   elem_currentText.classList.add('pause');
+      // }
 
-      u.onresume = function(event) {
-        elem_btnPause.style.display = 'inline-block';
-        elem_btnResume.style.display = 'none';
-        // elem_speechText.focus();
-      }
+      // u.onresume = function(event) {
+      //   elem_btnPause.style.display = 'inline-block';
+      //   elem_btnResume.style.display = 'none';
+      //   // elem_speechText.focus();
+      // }
 
       u.onstart = function(event) {
         elem_btnSpeech.style.display = 'none';
-        elem_btnCancel.style.display = 'inline-block';
-        elem_btnPause.removeAttribute('disabled');
+        elem_btnCancel.removeAttribute('disabled');
+        elem_btnPause.style.display = 'inline-block';
         elem_btnResume.style.display = 'none';
         elem_speechText.readOnly = true;
         elem_speechText.style.display = 'none';
         elem_textareaCover.style.display = 'block';
-        syncDivAndTextarea({text: true});
+        setControllerStatus(false);
+        checkSelection();
         // elem_speechText.focus();
       }
 
       u.onend = function(event) {
-        elem_btnCancel.style.display = 'none';
-        elem_btnSpeech.style.display = 'inline-block';
-        elem_btnPause.setAttribute('disabled', true);
-        elem_btnPause.style.display = 'inline-block';
-        elem_btnResume.style.display = 'none';
-        setSelectionRange(0, 0);
-        //speechText.setSelectionRange(0, 0);
-        elem_speechText.readOnly = false;
-        elem_speechText.style.display = 'block';
-        elem_textareaCover.style.display = 'none';
-        syncDivAndTextarea({text: true, scrollPosition: true, selectionRang:true});
-        elem_speechText.focus();
+        if(ttsfox.status === 'play') {
+          ttsfox.cancel();
+        }
+        else if(ttsfox.status === 'readout') {
+          ttsfox.pause();
+        }
       }
+
       u.onboundary = function(event) {
+        if(ttsfox.status !== 'play' && ttsfox.status !== 'readout')
+          return;
+        if(ttsfox.status === 'play')
+          ttsfox.lastPosition = event.charIndex + setting.startPosition;
         if(setting.highlight) {
           if(setting.highlightRule.highlight) {
             let start = event.charIndex + setting.startPosition;
+            // console.log('start = ' + start);
             let text = elem_speechText.value;
             let tmpText = text.substring(start);
-            let nextSpace = tmpText.search('[ ,.;\n]');
+            let nextSpace = tmpText.search('[ ,.;\u2014\u2026\n]');
             //console.log(nextSpace);
             if(nextSpace == 1 && setting.highlightRule.singleChar === false ) {
               let tmpText2 = text.substring(start+2);
-              let nextSpace2 = tmpText2.search('[ ,.;\n]');
+              let nextSpace2 = tmpText2.search('[ ,.;\u2014\u2026\n]');
               if(nextSpace2 === -1) {
                 nextSpace = -1;
               }
@@ -121,13 +158,14 @@ let ttsfox = {
             else {
               nextSpace = start + nextSpace;
             }
-            setSelectionRange(start, nextSpace);
+            if(nextSpace > ttsfox.textInfo.end) nextSpace = ttsfox.textInfo.end;
+            setSelectionRange(start, nextSpace, false, {start:ttsfox.textInfo.start, end:ttsfox.textInfo.end});
             //speechText.setSelectionRange(event.charIndex, nextSpace);
           }
           else {
             let start = event.charIndex + setting.startPosition + 4;
             if(start > text.length) start = text.length;
-            setSelectionRange(start, start, true);
+            setSelectionRange(start, start, true, {start:ttsfox.textInfo.start, end:ttsfox.textInfo.start});
           }
         }
       }
@@ -135,6 +173,25 @@ let ttsfox = {
     }
   }
 };
+
+const setControllerStatus = (enabled) => {
+  if(enabled) {
+    elem_voice.removeAttribute('disabled');
+    elem_pitch.removeAttribute('disabled');
+    elem_rate.removeAttribute('disabled');
+    elem_volume.removeAttribute('disabled');
+    elem_readSelectedFragment.removeAttribute('disabled');
+    elem_startFromCursorPos.removeAttribute('disabled');
+  }
+  else {
+    elem_voice.setAttribute('disabled', 'true');
+    elem_pitch.setAttribute('disabled', 'true');
+    elem_rate.setAttribute('disabled', 'true');
+    elem_volume.setAttribute('disabled', 'true');
+    elem_readSelectedFragment.setAttribute('disabled', 'true');
+    elem_startFromCursorPos.setAttribute('disabled', 'true');
+  }
+}
 
 const syncOption = (changes, area) => {
   let syncOptionList = [
@@ -164,6 +221,11 @@ const storageChangeHandler = (changes, area) => {
           currentPrefs[item] = changes[item].newValue;
           break;
         case 'cacheText':
+          ttsfox.status = 'stop';
+          try{
+            cancel();
+          }
+          catch(ex){}
           elem_speechText.value = changes[item].newValue;
           elem_speechText.setSelectionRange(0, 0);
           setSelectionRange(0, 0);
@@ -191,61 +253,228 @@ const syncDivAndTextarea = (options) => {
   }
 };
 
-const setSelectionRange = (rangeStart, rangeEnd, forceScroll) => {
+const createSpan = (parent, classList, text) => {
+  let s = document.createElement('SPAN');
+  for(let c of classList)
+    s.classList.add(c);
+  if(text !== undefined)
+    s.textContent = text;
+  parent.appendChild(s);
+  return s;
+}
+
+const setSelectionRange = (rangeStart, rangeEnd, forceScroll, textRange) => {
   //console.log('rangeStart = ' + rangeStart + ', rangeEnd = ' + rangeEnd);
+  elem_currentText.textContent = '';
 
   let start = rangeStart;
   let end = rangeEnd;
   let text = elem_speechText.value;
-  elem_currentText.textContent = '';
-  elem_currentText.appendChild(document.createTextNode(text.substring(0, start)));
-  let s = document.createElement('SPAN');
-  s.textContent = text.substring(start, end);
-  elem_currentText.appendChild(s)
-  elem_currentText.appendChild(document.createTextNode(text.substring(end)));
+  let ts = 0;
+  let te = text.length;
+  if(textRange) {
+    ts = textRange.start;
+    te = textRange.end;
+    createSpan(elem_currentText, ['blur'], text.substring(0, ts));
+  }
+  elem_currentText.appendChild(document.createTextNode(text.substring(ts, start)));
+  let s = createSpan(elem_currentText, ['highlight'], text.substring(start, end));
+  elem_currentText.appendChild(document.createTextNode(text.substring(end, te)));
+  if(textRange) {
+    createSpan(elem_currentText, ['blur'], text.substring(te));
+  }
+
   //s.scrollIntoView({behavior: 'instant', block: 'nearest', inline: 'nearest'}); // Firefox 58+
   if(rangeStart !== rangeEnd || forceScroll) {
     s.scrollIntoView(false);
   }
 };
 
+const setParagraphRange = () => {
+  elem_currentText.textContent = '';
+  let paragraphId = 0;
+  let sentenceId = 0;
+  let newParagraph = true;
+
+  let fullText = elem_speechText.value;
+  let text = fullText.substring(ttsfox.textInfo.start, ttsfox.textInfo.end);
+  let offset = ttsfox.textInfo.start;
+  let sentences = text.split(/[\n.\u3002]/);
+  let start = 0;
+  let previousStart = 0;
+  let cursor = false;
+  //let highlightChar = text.substring(ttsfox.lastPosition, ttsfox.lastPosition+1);
+
+  if(ttsfox.textInfo.start>0) {
+    createSpan(elem_currentText, ['blur'], fullText.substring(0, ttsfox.textInfo.start));
+  }
+
+  for(let s of sentences) {
+    let nextSpliter = text.substring(start+s.length, start+s.length+1);
+    if(s.length) {
+
+      let t = /[^ ]/;
+      let skip = s.search(t);
+      let space = s.substring(0, skip);
+      let stext = s.substring(skip);
+
+      if(sentenceId > 0) {
+        let tmpText = text.substring(previousStart, start+skip);
+        if(tmpText.includes('\n')) {
+          newParagraph = true;
+          paragraphId++;
+        }
+      }
+
+      previousStart = start+skip;
+      if(ttsfox.lastPosition >= offset+start && ttsfox.lastPosition < offset+start+s.length) {
+        cursor = true;
+        let highlightPos = ttsfox.lastPosition - offset- start - skip;
+        setSentenceRange(offset+start+skip, newParagraph, space, stext, nextSpliter, paragraphId, sentenceId, highlightPos);
+      }
+      else {
+        if(!cursor && offset+start > ttsfox.lastPosition) {
+          cursor = true;
+          ttsfox.lastPosition = offset+ start + skip;
+          //highlightChar = text.substring(ttsfox.lastPosition, ttsfox.lastPosition+3);
+          //console.log('new highlightChar = ' + highlightChar);
+          setSentenceRange(offset+start+skip, newParagraph, space, stext, nextSpliter, paragraphId, sentenceId, 0);
+        }
+        else {
+          setSentenceRange(offset+start+skip, newParagraph, space, stext, nextSpliter, paragraphId, sentenceId);
+        }
+      }
+
+      if(stext.length) {
+        newParagraph = false;
+        sentenceId++;
+      }
+
+    }
+    else {
+      setSentenceRange(offset+start, newParagraph, '', '', nextSpliter, paragraphId, sentenceId);
+    }
+
+    start += (s.length + 1);
+  }
+
+  if(ttsfox.textInfo.end<elem_speechText.value.length) {
+    createSpan(elem_currentText, ['blur'], fullText.substring(ttsfox.textInfo.end));
+  }
+
+};
+
+function onClickSentence(event) {
+  if(event && event.shiftKey) {
+    elem_currentText.classList.remove('pause');
+    ttsfox.status = 'readout';
+    let start = parseInt(this.getAttribute('pos'));
+    let text = this.textContent;
+    let setting = getCurrentSetting();
+    setting.startPosition = start;
+    ttsfox.speech(text, setting);
+  }
+  else {
+    let oldCursor = elem_currentText.querySelector('.cursor');
+    oldCursor.parentNode.removeChild(oldCursor);
+    ttsfox.lastPosition = parseInt(this.getAttribute('pos'));
+    let newParagraph = this.classList.contains('newParagraph');
+    let text = this.textContent;
+    let s = document.createElement('SPAN');
+    s.classList.add('sentence');
+    if(newParagraph)
+      s.classList.add('newParagraph');
+    s.setAttribute('paragraphId', this.getAttribute('paragraphId'));
+    s.setAttribute('sentenceId', this.getAttribute('sentenceId'));
+    s.setAttribute('pos', this.getAttribute('pos'));
+    s.onclick = onClickSentence;
+    createSpan(s, ['cursor']);
+    s.appendChild(document.createTextNode(text));
+    this.parentNode.replaceChild(s, this);
+  }
+}
+
+const setSentenceRange = (pos, newParagraph, space, text, nextSpliter, paragraphId, sentenceId, highlightPos) => {
+  if(space.length)
+    elem_currentText.appendChild(document.createTextNode(space));
+  if(text.length) {
+    let s = document.createElement('SPAN');
+    s.classList.add('sentence');
+    if(newParagraph)
+      s.classList.add('newParagraph');
+    s.setAttribute('paragraphId', paragraphId);
+    s.setAttribute('sentenceId', sentenceId);
+    s.setAttribute('pos', pos);
+    s.onclick = onClickSentence;
+
+    if(highlightPos !== undefined) {
+      let text1 = text.substring(0, highlightPos);
+      let text2 = text.substring(highlightPos);
+      if(text1.length) {
+        s.appendChild(document.createTextNode(text1));
+      }
+      createSpan(s, ['cursor']);
+      if(text2.length) {
+        s.appendChild(document.createTextNode(text2));
+      }
+    }
+    else {
+      s.textContent = text;
+    }
+    elem_currentText.appendChild(s);
+  }
+  if(nextSpliter.length)
+    elem_currentText.appendChild(document.createTextNode(nextSpliter));
+};
+
+const getCurrentSetting = () => {
+  let setting = {
+    voice: elem_voice.selectedIndex,
+    pitch: ttsfox.prefsMapping.pitch[elem_pitch.value],
+    rate: ttsfox.prefsMapping.rate[elem_rate.value],
+    volume: ttsfox.prefsMapping.volume[elem_volume.value]
+  };
+  if(highlightRule[ttsfox.voices[setting.voice].lang]) {
+    setting.highlight = true;
+    setting.highlightRule = highlightRule[ttsfox.voices[setting.voice].lang];
+  }
+  else {
+    setting.highlight = true;
+    setting.highlightRule = highlightRule.default;
+  }
+  return setting;
+};
+
 const speech = () => {
   chrome.runtime.sendMessage({action: 'stop'});
+  ttsfox.status = 'play';
   let startFromCursorPos = elem_startFromCursorPos.checked && !elem_startFromCursorPos.getAttribute('disabled');
   let readSelectedFragment = elem_readSelectedFragment.checked && !elem_readSelectedFragment.getAttribute('disabled');
   if(ttsfox.voices && ttsfox.voices.length) {
-    let setting =  {
-      voice: elem_voice.selectedIndex,
-      pitch: ttsfox.prefsMapping.pitch[elem_pitch.value],
-      rate: ttsfox.prefsMapping.rate[elem_rate.value],
-      volume: ttsfox.prefsMapping.volume[elem_volume.value],
-    };
-    if(highlightRule[ttsfox.voices[setting.voice].lang]) {
-      setting.highlight = true;
-      setting.highlightRule = highlightRule[ttsfox.voices[setting.voice].lang];
-    }
-    else {
-      setting.highlight = true;
-      setting.highlightRule = highlightRule.default;
-    }
+    let setting = getCurrentSetting();
+    let text = '';
     if(startFromCursorPos) {
-      let start = elem_speechText.selectionStart;
-      let fullText = elem_speechText.value
-      let text = fullText.substring(start, fullText.length);
-      setting.startPosition = start;
-      ttsfox.speech(text, setting);
+      let fullText = ttsfox.textInfo.fullText = elem_speechText.value;
+      let start = ttsfox.textInfo.start = elem_speechText.selectionStart;
+      ttsfox.textInfo.end = fullText.length;
+
+      text = fullText.substring(start, fullText.length);
     }
     else if(readSelectedFragment) {
-      let start = elem_speechText.selectionStart;
-      let fullText = elem_speechText.value
-      let text = fullText.substring(start, elem_speechText.selectionEnd);
-      setting.startPosition = start;
-      ttsfox.speech(text, setting);
+      let fullText = ttsfox.textInfo.fullText = elem_speechText.value;
+      let start = ttsfox.textInfo.start = elem_speechText.selectionStart;
+      ttsfox.textInfo.end = elem_speechText.selectionEnd;
+
+      text = fullText.substring(start, elem_speechText.selectionEnd);
     }
     else {
-      setting.startPosition = 0;
-      ttsfox.speech(elem_speechText.value, setting);
+      text = ttsfox.textInfo.fullText = elem_speechText.value;
+      let start = ttsfox.textInfo.start = 0;
+      ttsfox.textInfo.end = text.length;
     }
+    setting.startPosition = ttsfox.lastPosition = ttsfox.textInfo.start;
+    syncDivAndTextarea({text: true});
+    ttsfox.speech(text, setting);
   } else {
     //TODO: show alert
   }
@@ -368,10 +597,8 @@ const startup = () => {
       let text = elem_speechText.value;
       elem_currentText.textContent = '';
       elem_currentText.appendChild(document.createTextNode(text.substring(0, start)));
-      let s = document.createElement('SPAN');
-      s.textContent = text.substring(start, end);
-      elem_currentText.appendChild(s)
-      elem_currentText.appendChild(document.createTextNode(text.substring(end, text.lengrh)));
+      createSpan(elem_currentText, [], text.substring(start, end));
+      elem_currentText.appendChild(document.createTextNode(text.substring(end, text.length)));
       elem_speechText.style.opacity = 0;
       //elem_currentText.style.opacity = 1;
       elem_currentText.scrollTop = elem_speechText.scrollTop;
@@ -390,6 +617,7 @@ const startup = () => {
 
     browser.runtime.onMessage.addListener( message => {
       if (message.action === 'stop') {
+        ttsfox.status = 'stop';
         try{
           cancel();
         }
@@ -493,6 +721,10 @@ const init = preferences => {
   let l10nTags = Array.from(document.querySelectorAll('[data-l10n-id]'));
   l10nTags.forEach(tag => {
     tag.textContent = browser.i18n.getMessage(tag.getAttribute('data-l10n-id'));
+  });
+  let l10nHints = Array.from(document.querySelectorAll('[data-l10n-title]'));
+  l10nHints.forEach(tag => {
+    tag.setAttribute('title', browser.i18n.getMessage(tag.getAttribute('data-l10n-title')));
   });
 }
 

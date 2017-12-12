@@ -10,7 +10,7 @@
   <body>
     <div>
       <div>
-        <div style="display:inline-block;width:330px;">
+        <div id="ttsParams" style="display:inline-block;width:330px;">
           <div class="itemDiv">
             <span class="itemLabel" data-l10n-id="voice">Voice</span>
             <select id="voice" type="option" class="itemInput">
@@ -47,10 +47,10 @@
       </div>
       <div class="buttonBar">
         <div class="buttonGroup">
-          <button type="button" id="btnSpeech" data-l10n-id="speech">Speech</button>
-          <button type="button" id="btnCancel" style="display: none;" data-l10n-id="cancel">Cancel</button>
-          <button type="button" id="btnPause" disabled data-l10n-id="pause">Pause</button>
-          <button type="button" id="btnResume" style="display: none;" data-l10n-id="resume">Resume</button>
+          <button type="button" id="btnCancel" data-l10n-title="cancel" disabled><img src="icon/stop.svg"></button>
+          <button type="button" id="btnSpeech" data-l10n-title="speech"><img src="icon/play.svg"></button>
+          <button type="button" id="btnPause" data-l10n-title="pause" style="display: none;"><img src="icon/pause.svg"></button>
+          <button type="button" id="btnResume" data-l10n-title="resume" style="display: none;"><img src="icon/play.svg"></button>
         </div>
       </div>
     </div>
