@@ -114,8 +114,8 @@ let ttsfox = {
         elem_speechText.readOnly = true;
         elem_speechText.style.display = 'none';
         elem_textareaCover.style.display = 'block';
-        setControllerStatus(false);
         checkSelection();
+        setControllerStatus(false);
         // elem_speechText.focus();
       }
 
