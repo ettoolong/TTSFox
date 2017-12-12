@@ -165,7 +165,7 @@ let ttsfox = {
           else {
             let start = event.charIndex + setting.startPosition + 4;
             if(start > text.length) start = text.length;
-            setSelectionRange(start, start, true, {start:ttsfox.textInfo.start, end:ttsfox.textInfo.start});
+            setSelectionRange(start, start, true, {start:ttsfox.textInfo.start, end:ttsfox.textInfo.end});
           }
         }
       }
