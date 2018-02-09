@@ -92,18 +92,22 @@
 		"description": ""
 	},
 	"rateS5": {
-		"message": "2 X",
+		"message": "1.5 X",
 		"description": ""
 	},
 	"rateS6": {
-		"message": "4 X",
+		"message": "2 X",
 		"description": ""
 	},
 	"rateS7": {
-		"message": "5 X",
+		"message": "4 X",
 		"description": ""
 	},
 	"rateS8": {
+		"message": "8 X",
+		"description": ""
+	},
+	"rateS9": {
 		"message": "10 X",
 		"description": ""
 	},

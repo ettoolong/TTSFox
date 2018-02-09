@@ -9,7 +9,7 @@ let defaultPreference = {
   volume: 10,
   autoStartSpeech: false,
   cacheText: '',
-  version: 2
+  version: 3
 };
 let os = '';
 let fxVersion = 52;
@@ -22,7 +22,7 @@ let initCount = 0;
 let allVoices = {};
 let prefsMapping = {
   pitch: [0, 0.5, 1.0, 1.5, 2.0],
-  rate: [0.1, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 10.0],
+  rate: [0.1, 0.125, 0.25, 0.5, 1.0, 1.5, 2.0, 4.0, 8.0, 10.0],
   volume: [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 };
 
@@ -70,6 +70,11 @@ const loadPreference = () => {
     if (preferences.version !== defaultPreference.version) {
       let update = {};
       let needUpdate = false;
+      if(preferences.version < 3 && defaultPreference.version >= 3 && preferences.rate > 4) {
+        preferences.rate += 1;
+        update.rate = preferences.rate;
+        needUpdate = true;
+      }
       for(let p in defaultPreference) {
         if(preferences[p] === undefined) {
           update[p] = defaultPreference[p];
@@ -77,6 +82,7 @@ const loadPreference = () => {
         }
       }
       if(needUpdate) {
+        update.version = defaultPreference.version;
         browser.storage.local.set(update).then(null, err => {});
       }
     }

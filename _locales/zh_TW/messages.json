@@ -72,39 +72,43 @@
 		"description": ""
 	},
 	"rateS0": {
-		"message": "非常慢",
+		"message": "1/10 X",
 		"description": ""
 	},
 	"rateS1": {
-		"message": "很慢",
+		"message": "1/8 X",
 		"description": ""
 	},
 	"rateS2": {
-		"message": "慢",
+		"message": "1/4 X",
 		"description": ""
 	},
 	"rateS3": {
-		"message": "稍慢",
+		"message": "1/2 X",
 		"description": ""
 	},
 	"rateS4": {
-		"message": "正常",
+		"message": "1 X",
 		"description": ""
 	},
 	"rateS5": {
-		"message": "稍快",
+		"message": "1.5 X",
 		"description": ""
 	},
 	"rateS6": {
-		"message": "快",
+		"message": "2 X",
 		"description": ""
 	},
 	"rateS7": {
-		"message": "很快",
+		"message": "4 X",
 		"description": ""
 	},
 	"rateS8": {
-		"message": "非常快",
+		"message": "8 X",
+		"description": ""
+	},
+	"rateS9": {
+		"message": "10 X",
 		"description": ""
 	},
 	"autoStartSpeech": {

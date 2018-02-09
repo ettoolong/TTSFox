@@ -31,7 +31,7 @@ let ttsfox = {
   textInfo: {start: 0, end: 0},
   prefsMapping: {
     pitch: [0, 0.5, 1.0, 1.5, 2.0],
-    rate: [0.1, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 10.0],
+    rate: [0.1, 0.125, 0.25, 0.5, 1.0, 1.5, 2.0, 4.0, 8.0, 10.0],
     volume: [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     //voice: [] base on system
   },
@@ -375,9 +375,14 @@ function onClickSentence(event) {
     ttsfox.speech(text, setting);
   }
   else {
+    let oldPosition = ttsfox.lastPosition;
+    let newPosition = ttsfox.lastPosition = parseInt(this.getAttribute('pos'));
+    if(oldPosition === newPosition) {
+      resume();
+      return;
+    }
     let oldCursor = elem_currentText.querySelector('.cursor');
     oldCursor.parentNode.removeChild(oldCursor);
-    ttsfox.lastPosition = parseInt(this.getAttribute('pos'));
     let newParagraph = this.classList.contains('newParagraph');
     let text = this.textContent;
     let s = document.createElement('SPAN');
