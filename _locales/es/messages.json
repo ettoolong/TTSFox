@@ -1,0 +1,138 @@
+{
+  "extName": {
+    "message": "TTSFox",
+    "description": ""
+  },
+  "extDescription": {
+    "message": "Texto a voz en Firefox. Usa los motores TTS de tu ordenador, podrás usarlo incluso sin conexión.",
+    "description": ""
+  },
+  "actionButtonTitle": {
+    "message": "TTSFox",
+    "description": ""
+  },
+  "contextMenuItemTitle_action1": {
+    "message": "Abrir ventana de lectura",
+    "description": ""
+  },
+  "contextMenuItemTitle_action2": {
+    "message": "Leer texto seleccionado",
+    "description": ""
+  },
+  "iconColor": {
+    "message": "Color del icono de la barra",
+    "description": ""
+  },
+  "iconColorBlack": {
+    "message": "Negro",
+    "description": ""
+  },
+  "iconColorWhite": {
+    "message": "Blanco",
+    "description": ""
+  },
+  "voice": {
+    "message": "Voz",
+    "description": ""
+  },
+  "pitch": {
+    "message": "Tono",
+    "description": ""
+  },
+  "rate": {
+    "message": "Velocidad",
+    "description": ""
+  },
+  "volume": {
+    "message": "Volumen",
+    "description": ""
+  },
+  "startFromCursorPos": {
+    "message": "Empezar en la posición del cursor",
+    "description": ""
+  },
+  "readSelectedFragment": {
+    "message": "Sólo leer fragmento de texto seleccionado",
+    "description": ""
+  },
+  "speech": {
+    "message": "Leer",
+    "description": ""
+  },
+  "cancel": {
+    "message": "Cancelar",
+    "description": ""
+  },
+  "pause": {
+    "message": "Pausa",
+    "description": ""
+  },
+  "resume": {
+    "message": "Continuar",
+    "description": ""
+  },
+  "rateS0": {
+    "message": "1/10 X",
+    "description": ""
+  },
+  "rateS1": {
+    "message": "1/8 X",
+    "description": ""
+  },
+  "rateS2": {
+    "message": "1/4 X",
+    "description": ""
+  },
+  "rateS3": {
+    "message": "1/2 X",
+    "description": ""
+  },
+  "rateS4": {
+    "message": "1 X",
+    "description": ""
+  },
+  "rateS5": {
+    "message": "1.5 X",
+    "description": ""
+  },
+  "rateS6": {
+    "message": "2 X",
+    "description": ""
+  },
+  "rateS7": {
+    "message": "4 X",
+    "description": ""
+  },
+  "rateS8": {
+    "message": "8 X",
+    "description": ""
+  },
+  "rateS9": {
+    "message": "10 X",
+    "description": ""
+  },
+  "autoStartSpeech": {
+    "message": "Leer automáticamente cuando se use la ventana",
+    "description": ""
+  },
+  "contextMenuEnabled": {
+    "message": "Habilitar menú contextual",
+    "description": ""
+  },
+  "action1": {
+    "message": "Abrir ventana de lectura",
+    "description": ""
+  },
+  "action2": {
+    "message": "Leer texto seleccionado",
+    "description": ""
+  },
+  "contextMenuAction": {
+    "message": "Acción del menú contextual",
+    "description": ""
+  },
+  "hotkeyAction": {
+    "message": "Acción de la tecla rápida",
+    "description": ""
+  }
+}

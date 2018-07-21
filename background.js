@@ -96,17 +96,15 @@ window.addEventListener('DOMContentLoaded', event => {
 });
 
 browser.browserAction.onClicked.addListener(tab => {
-  getActiveTab( tab => {
-    if(tab) {
-      if(tab.url.startsWith('about:')) {
-        openDialog('');
-      } else {
-        getSelectionText(tab, selectionText => {
-          openDialog(selectionText);
-        });
-      }
+  if(tab) {
+    if(tab.url.startsWith('about:')) {
+      openDialog('');
+    } else {
+      getSelectionText(tab, selectionText => {
+        openDialog(selectionText);
+      });
     }
-  });
+  }
 });
 
 const getActiveTab = callback => {
