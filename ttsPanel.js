@@ -762,3 +762,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
   }
 });
+
+if (window.location.pathname === '/ttsPanel.html') {
+  chrome.runtime.sendMessage({action: 'panelOpen'});
+}

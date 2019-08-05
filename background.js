@@ -12,7 +12,6 @@ let defaultPreference = {
   version: 3
 };
 let os = '';
-let fxVersion = 52;
 let menuId = null;
 let preferences = {};
 let dialog = null;
@@ -28,9 +27,6 @@ let prefsMapping = {
 
 browser.runtime.getPlatformInfo().then(platformInfo => {
   os = platformInfo.os;
-  browser.runtime.getBrowserInfo().then(browserInfo => {
-    fxVersion = parseInt(browserInfo.version);
-  });
 });
 
 const storageChangeHandler = (changes, area) => {
@@ -100,7 +96,7 @@ browser.browserAction.onClicked.addListener(tab => {
     if(tab.url.startsWith('about:')) {
       openDialog('');
     } else {
-      getSelectionText(tab, selectionText => {
+      getSelectionText(selectionText => {
         openDialog(selectionText);
       });
     }
@@ -118,18 +114,13 @@ const getActiveTab = callback => {
   });
 };
 
-const getSelectionText = (tab, callback) => {
-  browser.tabs.sendMessage(
-    tab.id,
-    {act: 'getSelectionText'}
-  ).then(response => {
-    if(response.text) {
-      callback(response.text);
-    }
-    else {
-      callback('');
-    }
-  }).catch( error => {
+const getSelectionText = (callback) => {
+  browser.tabs.executeScript({
+    file: "content-script.js"
+  }).then(result => {
+    callback(result[0])
+  }, err => {
+    console.log(err)
   });
 };
 
@@ -196,7 +187,7 @@ const openDialog = (selectionText) => {
       browser.windows.create({
         url: 'ttsPanel.html',
         type: 'panel',
-        incognito: true,
+        // incognito: true,
         width: winWidth,
         height: winHeight,
       }).then(windowInfo => {
@@ -218,15 +209,6 @@ browser.windows.onRemoved.addListener(windowID => {
   }
 });
 
-const exec = (selectionText) => {
-  if(preferences.contextMenuAction === 0) {
-    openDialog(selectionText);
-  }
-  else if(preferences.contextMenuAction === 1) {
-    startSpeech(selectionText);
-  }
-};
-
 const createContextMenu = () => {
   let title = preferences.contextMenuAction === 0 ?
     browser.i18n.getMessage('contextMenuItemTitle_action1') :
@@ -241,22 +223,11 @@ const createContextMenu = () => {
     title: title,
     contexts: contexts,
     onclick: (data, tab) => {
-      let text = 'selectionText' in data ? data.selectionText : '';
-      if( fxVersion >= 56 || text.length < 150) {
-        exec(text);
-      }
-      else {
-        // don't use data.selectionText, because it's max length is 150 character.
-        // https://bugzilla.mozilla.org/show_bug.cgi?id=1338898
-        // getActiveTab( tab => {
-        //   if(tab) {
-        getSelectionText(tab, selectionText => {
-          if(selectionText) {
-            exec(selectionText);
-          }
-        });
-        //   }
-        // });
+      let selectionText = ('selectionText' in data ? data.selectionText : '').trim();
+      if(preferences.contextMenuAction === 0) {
+        openDialog(selectionText);
+      } else if(preferences.contextMenuAction === 1) {
+        startSpeech(selectionText);
       }
     }
   });
@@ -282,16 +253,11 @@ const setBrowserActionIcon = () => {
 
 browser.commands.onCommand.addListener(command => {
   if (command === 'speech') {
-    getActiveTab( tab => {
-      if(tab) {
-        getSelectionText(tab, selectionText => {
-          if(selectionText && preferences.hotkeyAction === 0) {
-            openDialog(selectionText);
-          }
-          else if(preferences.hotkeyAction === 1) {
-            startSpeech(selectionText);
-          }
-        });
+    getSelectionText(selectionText => {
+      if (preferences.hotkeyAction === 0) {
+        openDialog(selectionText);
+      } else if (preferences.hotkeyAction === 1) {
+        startSpeech(selectionText);
       }
     });
   }
@@ -331,9 +297,13 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
 });
 
 const messageHandler = (message, sender, sendResponse) => {
-  if(message.action === 'stop') {
+  if (message.action === 'stop') {
     if(ttsTab) {
       stopSpeech(true);
+    }
+  } else if (message.action === 'panelOpen') {
+    if (!dialogTab) {
+      browser.windows.remove(sender.tab.windowId);
     }
   }
 };
